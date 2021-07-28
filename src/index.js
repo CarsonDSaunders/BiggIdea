@@ -1,14 +1,24 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import reportWebVitals from "./reportWebVitals";
+import { HashRouter, Route, Switch } from "react-router-dom";
+import Login from "./components/Login";
+import LoginCreation from "./components/LoginCreation";
+import Dashboard from "./components/Dashboard";
+import Board from "./components/Board";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+    <HashRouter>
+        <Switch>
+            <Route exact path="/" component={Login} />
+            <Route path="/create-account" component={LoginCreation} />
+            <Route path="/dashboard" component={Dashboard} />
+            <Route path="/dashboard" component={Dashboard} />
+            <Route path="/boards/:id/preview" component={Board} />
+        </Switch>
+    </HashRouter>,
+    document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function

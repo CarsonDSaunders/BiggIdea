@@ -1,0 +1,51 @@
+[{
+    "query_id": 1,
+    "board_id": 9,
+    "platform_id": 1,
+    "query_text": "jQuery"
+  }, {
+    "query_id": 2,
+    "board_id": 1,
+    "platform_id": 1,
+    "query_text": "Visual Communication"
+  }, {
+    "query_id": 3,
+    "board_id": 5,
+    "platform_id": 1,
+    "query_text": "Appeals"
+  }, {
+    "query_id": 4,
+    "board_id": 10,
+    "platform_id": 1,
+    "query_text": "Portuguese"
+  }, {
+    "query_id": 5,
+    "board_id": 10,
+    "platform_id": 1,
+    "query_text": "Executive Management"
+  }, {
+    "query_id": 6,
+    "board_id": 1,
+    "platform_id": 2,
+    "query_text": "UPS Shipping"
+  }, {
+    "query_id": 7,
+    "board_id": 10,
+    "platform_id": 1,
+    "query_text": "Pylons"
+  }, {
+    "query_id": 8,
+    "board_id": 9,
+    "platform_id": 0,
+    "query_text": "Xplan"
+  }, {
+    "query_id": 9,
+    "board_id": 5,
+    "platform_id": 2,
+    "query_text": "PPDS"
+  }, {
+    "query_id": 10,
+    "board_id": 5,
+    "platform_id": 2,
+    "query_text": "Kuka"
+  }]
