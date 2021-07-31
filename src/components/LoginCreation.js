@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { Switch, Link, Route } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
+import axios from "axios";
 
 //styled-componenets
 const LoginContainer = styled.div`
@@ -9,7 +10,7 @@ const LoginContainer = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-`
+`;
 
 const LoginForm = styled.form`
     width: 100%;
@@ -18,7 +19,12 @@ const LoginForm = styled.form`
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-`
+`;
+
+const ErrorMessage = styled.p`
+    color: red;
+    font-size: 2em;
+`;
 export default class LoginCreation extends Component {
     constructor(props) {
         super(props);
@@ -30,10 +36,19 @@ export default class LoginCreation extends Component {
             usernameVal: "",
             passwordVal: "",
             passwordConfirmVal: "",
+            activeError: false,
+            errorMessage: "",
         };
 
+        this.updateEmail = this.updateEmail.bind(this);
+        this.updateFirstName = this.updateFirstName.bind(this);
+        this.updateLastName = this.updateLastName.bind(this);
         this.updateUsername = this.updateUsername.bind(this);
         this.updatePassword = this.updatePassword.bind(this);
+        this.updatePasswordConfirm = this.updatePasswordConfirm.bind(this);
+        this.sendRequest = this.sendRequest.bind(this);
+        this.validateInput = this.validateInput.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     updateEmail(val) {
@@ -60,6 +75,57 @@ export default class LoginCreation extends Component {
         this.setState({ passwordConfirmVal: val });
     }
 
+    sendRequest() {
+        axios.post("/api/login/create", {
+            email: this.state.emailVal,
+            firstName: this.state.firstNameVal,
+            lastName: this.state.lastNameVal,
+            username: this.state.usernameVal,
+            password: this.state.passwordVal,
+            passwordConfirm: this.state.passwordConfirmVal,
+        });
+    }
+
+    validateInput() {
+        let curState = { ...this.state };
+        if (
+            curState.emailVal === "" ||
+            curState.firstNameVal === "" ||
+            curState.lastNameVal === "" ||
+            curState.usernameVal === "" ||
+            curState.passwordVal === "" ||
+            curState.passwordConfirmVal === ""
+        ) {
+            this.setState({
+                activeError: true,
+                errorMessage: "Not all fields are properly filled out",
+            });
+            console.error(`ERROR: Not all fields are properly filled out`);
+            return;
+        } else if (curState.passwordVal !== curState.passwordConfirmVal) {
+            this.setState({
+                activeError: true,
+                errorMessage: "Passwords do not match",
+            });
+            console.error(`ERROR: Passwords do not match`);
+            return;
+        } else {
+            this.setState({
+                activeError: false,
+                errorMessage: "",
+            });
+            return;
+        }
+    }
+
+    handleSubmit(event) {
+        event.preventDefault();
+        this.validateInput();
+        if (this.state.activeError === false) {
+            this.sendRequest();
+        }
+    }
+
     render() {
         return (
             <LoginContainer>
@@ -67,41 +133,47 @@ export default class LoginCreation extends Component {
                     <h1 class="logo">Bigg Idea</h1>
                 </div>
                 <LoginForm>
+                    <p>Email:</p>
                     <input
                         class="login-creation-input"
                         type="text"
                         placeholder="Email"
                         value={this.state.emailVal}
-                        onChange={(e) => this.updateUsername(e.target.value)}
-                    ></input>
+                        onChange={(e) => this.updateEmail(e.target.value)}
+                    />
+                    <p>First Name:</p>
                     <input
                         class="login-creation-input"
                         type="text"
                         placeholder="First Name"
                         value={this.state.firstNameVal}
                         onChange={(e) => this.updateFirstName(e.target.value)}
-                    ></input>
+                    />
+                    <p>Last Name:</p>
                     <input
                         class="login-creation-input"
                         type="text"
                         placeholder="Last Name"
                         value={this.state.lastNameVal}
                         onChange={(e) => this.updateLastName(e.target.value)}
-                    ></input>
+                    />
+                    <p>Username:</p>
                     <input
                         class="login-creation-input"
                         type="text"
                         placeholder="Username"
                         value={this.state.usernameVal}
                         onChange={(e) => this.updateUsername(e.target.value)}
-                    ></input>
+                    />
+                    <p>Password:</p>
                     <input
                         class="login-creation-input"
                         type="text"
                         placeholder="Password"
                         value={this.state.passwordVal}
                         onChange={(e) => this.updatePassword(e.target.value)}
-                    ></input>
+                    />
+                    <p>Confirm Password:</p>
                     <input
                         class="login-creation-input"
                         type="text"
@@ -110,12 +182,17 @@ export default class LoginCreation extends Component {
                         onChange={(e) =>
                             this.updatePasswordConfirm(e.target.value)
                         }
-                    ></input>
+                    />
                     <Link to="/">
-                        <button type="submit" class="login-creation-submit">
+                        <button
+                            type="submit"
+                            class="login-creation-submit"
+                            onClick={(e) => this.handleSubmit(e)}
+                        >
                             Create Account
                         </button>
                     </Link>
+                    <ErrorMessage>{this.state.errorMessage}</ErrorMessage>
                 </LoginForm>
             </LoginContainer>
         );

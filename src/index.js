@@ -2,21 +2,12 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
-import { HashRouter, Route, Switch } from "react-router-dom";
-import Login from "./components/Login";
-import LoginCreation from "./components/LoginCreation";
-import Dashboard from "./components/Dashboard";
-import Board from "./components/Board";
+import { HashRouter } from "react-router-dom";
+import App from "./App.js";
 
 ReactDOM.render(
     <HashRouter>
-        <Switch>
-            <Route exact path="/" component={Login} />
-            <Route path="/create-account" component={LoginCreation} />
-            <Route path="/dashboard" component={Dashboard} />
-            <Route path="/dashboard" component={Dashboard} />
-            <Route path="/boards/:id/preview" component={Board} />
-        </Switch>
+        <App />
     </HashRouter>,
     document.getElementById("root")
 );
