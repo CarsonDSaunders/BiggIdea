@@ -11,7 +11,6 @@ const twitter = require('./controllers/Twitter');
 
 const PORT = process.env.PORT || 8000;
 
-<<<<<<< HEAD
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "http://localhost:3000"); // update to match the domain you will make the request from
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -35,7 +34,6 @@ app.get('/api/social/twitter/:term', async (req, res) => {
   
 })
 
-=======
 app.use(express.json());
 app.use(cors());
 app.use(
@@ -112,6 +110,5 @@ app.put("/boards/:id");
 
 //*  Deletes the specified board
 app.delete("/boards/:id");
->>>>>>> 24b2772e692a3f1b3056d9f7176de57ea7d9f2ae
 
 app.listen(PORT, () => console.log(`Server is running on PORT ${PORT}`));
