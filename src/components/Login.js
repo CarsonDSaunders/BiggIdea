@@ -44,7 +44,7 @@ export default class Login extends Component {
         return (
             <LoginContainer>
                 <div class="login-header">
-                    <h1 class="logo">Bigg Idea</h1>
+                    <img src="https://biggidea.s3.us-west-1.amazonaws.com/Bigg+Idea+-+Logo+Text.png" alt="Logo" />
                 </div>
                 <LoginForm>
                     <input class="login-input" type="text" value={this.state.usernameVal} placeholder="Username" onChange={(e) => this.updateUsername(e.target.value)}></input>
