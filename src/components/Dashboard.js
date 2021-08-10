@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux';
 import DashboardHeader from './DashboardHeader';
 import DashboardSidebar from './DashboardSidebar';
 import BoardPanel from './BoardPanel';

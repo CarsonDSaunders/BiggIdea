@@ -11,6 +11,10 @@ const EditorContainer = styled.div`
 export default class BoardPanel extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            candy: 3
+        }
     }
     render() {
         return (

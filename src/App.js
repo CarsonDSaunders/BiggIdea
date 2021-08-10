@@ -4,6 +4,7 @@ import Login from "./components/Login";
 import LoginCreation from "./components/LoginCreation";
 import Dashboard from "./components/Dashboard";
 import Board from "./components/Board";
+import './App.css'
 
 export class App extends React.Component {
     render() {
