@@ -46,10 +46,10 @@ export default class BoardItem extends Component {
     render() {
         return (
             <div>
-                <ItemContainer style={{backgroundColor: "#297A80", {this.props.post.attachments.media_keys}}}>
+                {/* <ItemContainer style={{backgroundColor: "#297A80", {this.props.post.attachments.media_keys}}}>
                     <p>{this.props.post.text}</p>
                     <p>{this.formatDate(this.props.post.created_at)}</p>
-                </ItemContainer>
+                </ItemContainer> */}
             </div>
         )
     }
