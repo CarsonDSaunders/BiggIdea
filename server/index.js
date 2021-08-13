@@ -1,9 +1,11 @@
+require("dotenv").config({ path: __dirname + `/../.env` });
 const express = require("express");
 const cors = require("cors");
 const session = require("express-session");
 const bcrypt = require("bcryptjs");
 const users = require("../data/sampleUsers.json");
 const loginController = require("./controllers/LoginController");
+<<<<<<< HEAD
 const twitter = require('./controllers/Twitter');
 require('dotenv').config();
 
@@ -11,24 +13,45 @@ const app = express();
 
 const PORT = process.env.PORT || 8000;
 
+=======
+const twitter = require("./controllers/Twitter");
+const massive = require("massive");
+
+const app = express();
+const PORT = process.env.PORT || 8000;
+
+massive({
+    connectionString: `${process.env.DB_CONNECTION_STRING}`,
+    ssl: { rejectUnauthorized: false },
+}).then((dbInstance) => {
+    app.set("db", dbInstance);
+});
+
+
+>>>>>>> 511f2e3abd3ce5bbdbc656a6eace41fffb65d833
 app.use(express.json());
 app.use(cors());
 app.use(
     session({
         resave: false,
         saveUninitialized: true,
-        secret: "super top secret secret",
+        secret: `${process.env.SESSION_SECRET}`,
         cookie: { maxAge: 60000 },
     })
 );
 
-function hashSampleData(index) {
-    let currentPassword = users[index].password;
-    let salt = bcrypt.genSaltSync(15);
-    users[index].password = bcrypt.hashSync(currentPassword, salt);
+const hashedPasswords = [];
+
+async function hashDbPasswords(userId) {
+    const db = await app.get("db");
+    console.log(db);
+    // let password = db.get_passwords(userId)
+    // console.log(password);
+    // let salt = bcrypt.genSaltSync(15);
+    // users[index].password = bcrypt.hashSync(currentPassword, salt);
 }
 
-hashSampleData(0);
+hashDbPasswords(1)
 
 const authenticateUser = (req, res, next) => {
     const { username, password } = req.body;
@@ -71,10 +94,10 @@ app.post(
 
 //* Retrieves a user's account info & boards
 app.get("/api/user/:id", (req, res) => {
-  const { id } = req.params;
-  let foundUser = users.find((value) => value.user_id === id);
-  console.log(foundUser)
-  //TODO Make request to DB
+    const { id } = req.params;
+    let foundUser = users.find((value) => value.user_id === id);
+    console.log(foundUser);
+    //TODO Make request to DB
     res.status(200).send(foundUser);
 });
 
@@ -93,6 +116,7 @@ app.put("/boards/:id");
 //* Deletes the specified board
 app.delete("/boards/:id");
 
+<<<<<<< HEAD
 //* Twitter API Hookup
 app.get('/api/social/twitter/:term', async (req, res) => {
   let { term } = req.params
@@ -107,5 +131,22 @@ app.get('/api/social/twitter/:term', async (req, res) => {
   let searchResults = await twitter.getStream()
   res.status(200).send(searchResults)
 })
+=======
+app.get("/", (req, res) => {
+    res.send("Hello world");
+});
+
+app.get("/api/social/twitter/:term", async (req, res) => {
+    let { term } = req.params;
+    let searchType = req.query.type;
+    if (searchType === "hashtag") {
+        let searchResults = await twitter.searchHashtag(term);
+        res.status(200).send(searchResults);
+    } else {
+        // let searchResults = await twitter.searchHashtag(term)
+        // res.status(200).send(searchResults)
+    }
+});
+>>>>>>> 511f2e3abd3ce5bbdbc656a6eace41fffb65d833
 
 app.listen(PORT, () => console.log(`Server is running on PORT ${PORT}`));

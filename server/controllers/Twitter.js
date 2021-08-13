@@ -1,14 +1,17 @@
+<<<<<<< HEAD
 const axios = require("axios");
 const Twitter = require("twitter-v2");
 require("dotenv").config();
+=======
+const Twitter = require('twitter-v2');
+require("dotenv").config({ path: __dirname + `/../../.env` }); 
+>>>>>>> 511f2e3abd3ce5bbdbc656a6eace41fffb65d833
 
 const client = new Twitter({
-    // consumer_key: `${process.env.TWITTER_CONSUMER_TOKEN}`,
-    consumer_key: ``,
-    // consumer_secret: `${process.env.TWITTER_CONSUMER_SECRET}`,
-    consumer_secret: ``,
-    // bearer_token: `${process.env.TWITTER_BEARER_TOKEN}`
-    bearer_token: ``
+
+    'consumer_key': `${process.env.TWITTER_CONSUMER_TOKEN}`,
+    'consumer_secret': `${process.env.TWITTER_CONSUMER_SECRET}`,
+    'bearer_token': `${process.env.TWITTER_BEARER_TOKEN}`
   });
 
 module.exports = {
