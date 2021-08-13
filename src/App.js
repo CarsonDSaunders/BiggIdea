@@ -14,7 +14,6 @@ export class App extends React.Component {
                     <Route exact path="/" component={Login} />
                     <Route path="/create-account" component={LoginCreation} />
                     <Route path="/dashboard" component={Dashboard} />
-                    <Route path="/dashboard" component={Dashboard} />
                     <Route path="/boards/:id/preview" component={Board} />
                 </Switch>
             </div>

@@ -7,18 +7,21 @@ const users = require("../data/sampleUsers.json");
 const loginController = require("./controllers/LoginController");
 const twitter = require("./controllers/Twitter");
 const massive = require("massive");
-
 const app = express();
 const PORT = process.env.PORT || 8000;
+const saltRounds = 15;
+const tenSecs = 1000 * 60 * 10;
 
-massive({
-    connectionString: `${process.env.DB_CONNECTION_STRING}`,
-    ssl: { rejectUnauthorized: false },
-}).then((dbInstance) => {
-    app.set("db", dbInstance);
-});
+//* Massive
+(async () => {
+    let db = await massive({
+        connectionString: `${process.env.DB_CONNECTION_STRING}`,
+        ssl: { rejectUnauthorized: false },
+    });
+    app.set("db", db);
+})();
 
-
+//* Middleware
 app.use(express.json());
 app.use(cors());
 app.use(
@@ -26,52 +29,58 @@ app.use(
         resave: false,
         saveUninitialized: true,
         secret: `${process.env.SESSION_SECRET}`,
-        cookie: { maxAge: 60000 },
+        cookie: { maxAge: tenSecs },
     })
 );
 
-const hashedPasswords = [];
+//* Hashes passwords already in DB (for testing)
+const hashDbPasswords = async (req, res) => {
+    let userId = req.params.id;
+    const dbInstance = await req.app.get("db");
+    dbInstance.get_passwords(userId).then((passwords) => {
+        let currentPassword = "HSBg2nwJ6n9";
+        bcrypt.hash(currentPassword, saltRounds, function (err, hash) {
+            dbInstance.update_password(hash, userId).then(() => {
+                res.status(200).send("Success!");
+            });
+        });
+    });
+};
 
-async function hashDbPasswords(userId) {
-    const db = await app.get("db");
-    console.log(db);
-    // let password = db.get_passwords(userId)
-    // console.log(password);
-    // let salt = bcrypt.genSaltSync(15);
-    // users[index].password = bcrypt.hashSync(currentPassword, salt);
-}
-
-hashDbPasswords(1)
-
-const authenticateUser = (req, res, next) => {
+const authenticateUser = async (req, res, next) => {
     const { username, password } = req.body;
-
+    const dbInstance = await req.app.get("db");
     //TODO Make request to DB
-    let foundUser = users.find((value) => value.username === username);
-    if (!foundUser) {
-        res.status(404).send("Username does not exist");
-        return;
-    } else {
-        let hashedPassword = foundUser.password;
-        let authenticated = bcrypt.compareSync(password, hashedPassword);
-        if (authenticated === true) {
-            req.session.user = foundUser;
-            res.status(200).send(foundUser);
-            return;
-        } else {
-            res.status(403).send("Invalid username or password");
-            return;
-        }
+    let foundUser = await dbInstance.users.find({
+        username: username.toLowerCase(),
+    });
+    console.log(foundUser.length);
+    if (foundUser.length > 0) {
+        let hash = foundUser[0].password;
+        bcrypt.compare(password, hash, function (err, authenticated) {
+            if (authenticated === true) {
+                req.session.user = foundUser[0];
+                next();
+            } else {
+                res.status(403).send("Invalid username or password");
+                return;
+            }
+        });
     }
 };
 
 //* Sample Endpoint
-app.get('/', (req, res) => {
-  res.send('Hello world');
-});
+app.get("/passwords/:id", hashDbPasswords);
 
 //* Authenticates a user
-app.post("/api/login", authenticateUser, (req, res) => {});
+app.post("/api/login", authenticateUser, async (req, res) => {
+    if (req.session.user) {
+        res.status(200).send(req.session.user)
+    } else {
+        res.status(400).send('Test')
+    }
+    
+});
 
 //* Creates a user account
 app.post(
@@ -94,6 +103,12 @@ app.get("/api/user/:id", (req, res) => {
 //* Updates a user's password
 app.put("/account");
 
+//* Logs out a user
+app.get("/logout", (req, res) => {
+    req.session.destroy();
+    res.redirect("/");
+});
+
 //* Creates a new board using provided info
 app.post("/boards");
 
@@ -105,10 +120,6 @@ app.put("/boards/:id");
 
 //* Deletes the specified board
 app.delete("/boards/:id");
-
-app.get("/", (req, res) => {
-    res.send("Hello world");
-});
 
 app.get("/api/social/twitter/:term", async (req, res) => {
     let { term } = req.params;

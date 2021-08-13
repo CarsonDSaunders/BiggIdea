@@ -73,6 +73,7 @@ export default class Board extends Component {
                     <input
                         id="hashtag"
                         type="radio"
+                        checked={this.state.type === 'hashtag' ? true : false}
                         value="hashtag"
                         onClick={(e) => this.changeType(e.target.id)}
                     />
@@ -81,6 +82,7 @@ export default class Board extends Component {
                         id="user"
                         type="radio"
                         value="user"
+                        checked={this.state.type === 'user' ? true : false}
                         onClick={(e) => this.changeType(e.target.id)}
                     />
                     <label>User</label>

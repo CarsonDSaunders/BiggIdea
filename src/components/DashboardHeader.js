@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import axios from 'axios';
 
 const Hamburger = styled.img`
     width: 3em;
@@ -19,17 +20,20 @@ const HeaderTitle = styled.h1`
     display: inline-block;
 `;
 
+function logoutUser() {
+    axios.get('/logout');
+}
+
 export default function DashboardHeader() {
     return (
         <div>
             <HeaderBar>
-                <HeaderTitle>Bigg Idea</HeaderTitle>
-                <Link to="/">
+                <HeaderTitle>Bigg Idea</HeaderTitle>    
                     <Hamburger
                         class="hamburger"
+                        onClick={(e) => logoutUser()}
                         src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Hamburger_icon.svg/1024px-Hamburger_icon.svg.png"
                     ></Hamburger>
-                </Link>
             </HeaderBar>
         </div>
     );

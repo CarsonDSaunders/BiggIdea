@@ -19,6 +19,8 @@ const TextContainer = styled.div`
 const PostText = styled.p`
     text-align: left;
     color: color-constrast(black vs white, gray, darkgray, lightgray);
+    font-weight: bold;
+    font-size: 16px;
 `;
 
 const PostDate = styled.p`

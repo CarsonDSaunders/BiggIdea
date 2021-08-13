@@ -129,13 +129,13 @@ export default class LoginCreation extends Component {
     render() {
         return (
             <LoginContainer>
-                <div class="login-creation-header">
-                    <h1 class="logo">Bigg Idea</h1>
+                <div className="login-creation-header">
+                    <h1 className="logo">Bigg Idea</h1>
                 </div>
                 <LoginForm>
                     <p>Email:</p>
                     <input
-                        class="login-creation-input"
+                        className="login-creation-input"
                         type="text"
                         placeholder="Email"
                         value={this.state.emailVal}
@@ -143,7 +143,7 @@ export default class LoginCreation extends Component {
                     />
                     <p>First Name:</p>
                     <input
-                        class="login-creation-input"
+                        className="login-creation-input"
                         type="text"
                         placeholder="First Name"
                         value={this.state.firstNameVal}
@@ -151,7 +151,7 @@ export default class LoginCreation extends Component {
                     />
                     <p>Last Name:</p>
                     <input
-                        class="login-creation-input"
+                        className="login-creation-input"
                         type="text"
                         placeholder="Last Name"
                         value={this.state.lastNameVal}
@@ -159,7 +159,7 @@ export default class LoginCreation extends Component {
                     />
                     <p>Username:</p>
                     <input
-                        class="login-creation-input"
+                        className="login-creation-input"
                         type="text"
                         placeholder="Username"
                         value={this.state.usernameVal}
@@ -167,7 +167,7 @@ export default class LoginCreation extends Component {
                     />
                     <p>Password:</p>
                     <input
-                        class="login-creation-input"
+                        className="login-creation-input"
                         type="text"
                         placeholder="Password"
                         value={this.state.passwordVal}
@@ -175,7 +175,7 @@ export default class LoginCreation extends Component {
                     />
                     <p>Confirm Password:</p>
                     <input
-                        class="login-creation-input"
+                        className="login-creation-input"
                         type="text"
                         placeholder="Confirm Password"
                         value={this.state.passwordConfirmVal}
@@ -186,7 +186,7 @@ export default class LoginCreation extends Component {
                     <Link to="/">
                         <button
                             type="submit"
-                            class="login-creation-submit"
+                            className="login-creation-submit"
                             onClick={(e) => this.handleSubmit(e)}
                         >
                             Create Account
