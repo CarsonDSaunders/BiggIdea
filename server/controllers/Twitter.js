@@ -1,11 +1,5 @@
-<<<<<<< HEAD
-const axios = require("axios");
-const Twitter = require("twitter-v2");
-require("dotenv").config();
-=======
 const Twitter = require('twitter-v2');
 require("dotenv").config({ path: __dirname + `/../../.env` }); 
->>>>>>> 511f2e3abd3ce5bbdbc656a6eace41fffb65d833
 
 const client = new Twitter({
 

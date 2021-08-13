@@ -5,15 +5,6 @@ const session = require("express-session");
 const bcrypt = require("bcryptjs");
 const users = require("../data/sampleUsers.json");
 const loginController = require("./controllers/LoginController");
-<<<<<<< HEAD
-const twitter = require('./controllers/Twitter');
-require('dotenv').config();
-
-const app = express();
-
-const PORT = process.env.PORT || 8000;
-
-=======
 const twitter = require("./controllers/Twitter");
 const massive = require("massive");
 
@@ -28,7 +19,6 @@ massive({
 });
 
 
->>>>>>> 511f2e3abd3ce5bbdbc656a6eace41fffb65d833
 app.use(express.json());
 app.use(cors());
 app.use(
@@ -116,22 +106,6 @@ app.put("/boards/:id");
 //* Deletes the specified board
 app.delete("/boards/:id");
 
-<<<<<<< HEAD
-//* Twitter API Hookup
-app.get('/api/social/twitter/:term', async (req, res) => {
-  let { term } = req.params
-  let searchType = req.query.type;
-  // if (searchType === 'hashtag') {
-  //   let searchResults = await twitter.searchHashtag(term)
-  //   res.status(200).send(searchResults)
-  // } else {
-  //   let searchResults = await twitter.getStream(term)
-  //   res.status(200).send(searchResults)
-  // }
-  let searchResults = await twitter.getStream()
-  res.status(200).send(searchResults)
-})
-=======
 app.get("/", (req, res) => {
     res.send("Hello world");
 });
@@ -147,6 +121,5 @@ app.get("/api/social/twitter/:term", async (req, res) => {
         // res.status(200).send(searchResults)
     }
 });
->>>>>>> 511f2e3abd3ce5bbdbc656a6eace41fffb65d833
 
 app.listen(PORT, () => console.log(`Server is running on PORT ${PORT}`));

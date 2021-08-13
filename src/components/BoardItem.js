@@ -91,7 +91,6 @@ export default class BoardItem extends Component {
     render() {
         return (
             <div>
-<<<<<<< HEAD
                 <Item
                     onClick={(e) => this.displayTweet(e)}
                     style={{ background: this.getBackground() }}
@@ -103,12 +102,6 @@ export default class BoardItem extends Component {
                         </PostText>
                     </TextContainer>
                 </Item>
-=======
-                {/* <ItemContainer style={{backgroundColor: "#297A80", {this.props.post.attachments.media_keys}}}>
-                    <p>{this.props.post.text}</p>
-                    <p>{this.formatDate(this.props.post.created_at)}</p>
-                </ItemContainer> */}
->>>>>>> 511f2e3abd3ce5bbdbc656a6eace41fffb65d833
             </div>
         );
     }
