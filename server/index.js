@@ -4,11 +4,15 @@ const cors = require("cors");
 const session = require("express-session");
 const bcrypt = require("bcryptjs");
 const users = require("../data/sampleUsers.json");
-const loginController = require("./controllers/LoginController");
 const twitter = require("./controllers/Twitter");
 const massive = require("massive");
+const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
+const withAuth = require("./auth");
+
 const app = express();
 const PORT = process.env.PORT || 8000;
+const secret = `${process.env.SESSION_SECRET}`;
 const saltRounds = 15;
 const tenSecs = 1000 * 60 * 10;
 
@@ -28,10 +32,11 @@ app.use(
     session({
         resave: false,
         saveUninitialized: true,
-        secret: `${process.env.SESSION_SECRET}`,
-        cookie: { maxAge: tenSecs },
+        secret: secret,
+        cookie: { maxAge: 10000 },
     })
 );
+app.use(cookieParser());
 
 //* Hashes passwords already in DB (for testing)
 const hashDbPasswords = async (req, res) => {
@@ -49,50 +54,72 @@ const hashDbPasswords = async (req, res) => {
 
 const authenticateUser = async (req, res, next) => {
     const { username, password } = req.body;
-    const dbInstance = await req.app.get("db");
-    //TODO Make request to DB
-    let foundUser = await dbInstance.users.find({
-        username: username.toLowerCase(),
-    });
-    console.log(foundUser.length);
-    if (foundUser.length > 0) {
-        let hash = foundUser[0].password;
-        bcrypt.compare(password, hash, function (err, authenticated) {
-            if (authenticated === true) {
-                req.session.user = foundUser[0];
-                next();
-            } else {
-                res.status(403).send("Invalid username or password");
-                return;
-            }
+    if (username === "" && password === "") {
+        res.sendStatus(406);
+    } else {
+        const dbInstance = await req.app.get("db");
+        let foundUser = await dbInstance.users.find({
+            username: username.toLowerCase(),
         });
+        if (foundUser.length > 0) {
+            let hash = foundUser[0].password;
+            bcrypt.compare(password, hash, function (err, authenticated) {
+                if (authenticated === true) {
+                    const payload = { username };
+                    const token = jwt.sign(payload, secret, {
+                        expiresIn: 5000,
+                    });
+                    req.session.user = foundUser[0];
+                    res.cookie("token", token, { httpOnly: true })
+                        .status(200)
+                        .send(req.session.user);
+                } else {
+                    res.sendStatus(403);
+                }
+            });
+        } else {
+            res.sendStatus(404);
+        }
     }
 };
 
 //* Sample Endpoint
 app.get("/passwords/:id", hashDbPasswords);
 
+app.get("/checkToken", withAuth, function (req, res) {
+    res.status(200).send("Token Validated");
+});
+
 //* Authenticates a user
-app.post("/api/login", authenticateUser, async (req, res) => {
-    if (req.session.user) {
-        res.status(200).send(req.session.user)
-    } else {
-        res.status(400).send('Test')
-    }
+app.post("/api/authenticate", authenticateUser);
+
+//* Creates a user account
+app.post("/api/login/create", async (req, res) => {
+    const dbInstance = await req.app.get("db");
+    let newUser = { ...req.body };
+    newUser.username = newUser.username.toLowerCase();
+    let { email, firstName, lastName, username, password } = newUser;
+
+    dbInstance.users.count({
+        username: username
+    }).then((total) => {
+        if (total > 0) {
+            res.status(409).send(`Username already taken!`);
+        } else {
+            bcrypt.hash(password, saltRounds, function (err, hash) {
+                dbInstance
+                    .create_account(email, firstName, lastName, username, hash)
+                    .then(() => {
+                        res.sendStatus(200);
+                    });
+            });
+        }
+    })
     
 });
 
-//* Creates a user account
-app.post(
-    "/api/login/create",
-    loginController.checkExistingUsers,
-    (req, res) => {
-        res.status(200).send(`Account sucessfully created!`);
-    }
-);
-
 //* Retrieves a user's account info & boards
-app.get("/api/user/:id", (req, res) => {
+app.get("/api/user/:id", withAuth, (req, res) => {
     const { id } = req.params;
     let foundUser = users.find((value) => value.user_id === id);
     console.log(foundUser);
@@ -101,25 +128,30 @@ app.get("/api/user/:id", (req, res) => {
 });
 
 //* Updates a user's password
-app.put("/account");
+app.put("/account", withAuth);
 
 //* Logs out a user
-app.get("/logout", (req, res) => {
-    req.session.destroy();
-    res.redirect("/");
+app.delete("/logout", withAuth, (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            res.status(400).send(err);
+        } else {
+            res.sendStatus(200);
+        }
+    });
 });
 
 //* Creates a new board using provided info
-app.post("/boards");
+app.post("/boards", withAuth);
 
 //* Retrieves the specified board’s information to display in the dashboard
-app.get("/boards/:id");
+app.get("/boards/:id", withAuth);
 
 //* Updates a board’s capture mode & associated platform queries
-app.put("/boards/:id");
+app.put("/boards/:id", withAuth);
 
 //* Deletes the specified board
-app.delete("/boards/:id");
+app.delete("/boards/:id", withAuth);
 
 app.get("/api/social/twitter/:term", async (req, res) => {
     let { term } = req.params;

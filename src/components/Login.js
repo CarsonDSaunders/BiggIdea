@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 
@@ -19,6 +19,11 @@ const LoginForm = styled.form`
     justify-content: space-around;
     align-items: center;
 `;
+
+const ErrorMessage = styled.p`
+    color: red;
+    font-size: 2em;
+`;
 export default class Login extends Component {
     constructor(props) {
         super(props);
@@ -27,6 +32,8 @@ export default class Login extends Component {
             usernameVal: "",
             passwordVal: "",
             passwordHidden: true,
+            activeError: false,
+            errorMessage: "",
         };
 
         this.updateUsername = this.updateUsername.bind(this);
@@ -53,26 +60,40 @@ export default class Login extends Component {
 
     handleSubmit(event) {
         event.preventDefault();
+        this.setState({
+            activeError: false,
+            errorMessage: "",
+        });
         axios
-            .post("/api/login", {
+            .post("/api/authenticate", {
                 username: this.state.usernameVal,
                 password: this.state.passwordVal,
             })
             .then((response) => {
-                if (response.status === 200) {
-                    const user = { ...response.data };
-                    this.props.history.push('/dashboard');
-                }
-                
-                // let now = new Date().toISOString();
-                // let nowArr = now.split("")
-                // nowArr.splice(10, 1, " ")
-                // nowArr.splice(19, 24, "")
-                // now = nowArr.join("")
-                // user.last_login = now
+                this.setState({
+                    activeError: false,
+                    errorMessage: "",
+                });
+                const user = { ...response.data };
+                this.props.history.push('/dashboard')
             })
-            .catch((error) => {
-                console.error(error);
+            .catch((err) => {
+                if (err.response.status === 406) {
+                    this.setState({
+                        activeError: true,
+                        errorMessage: "Please complete all fields",
+                    });
+                } else if (err.response.status === 404) {
+                    this.setState({
+                        activeError: true,
+                        errorMessage: "User not found",
+                    });
+                } else if (err.response.status === 403) {
+                    this.setState({
+                        activeError: true,
+                        errorMessage: "Invalid login credentials",
+                    });
+                }
             });
     }
 
@@ -120,6 +141,9 @@ export default class Login extends Component {
                 <Link to="/create-account">
                     <h4>Create Account</h4>
                 </Link>
+                {this.state.activeError ? (
+                    <ErrorMessage>{this.state.errorMessage}</ErrorMessage>
+                ) : null}
             </LoginContainer>
         );
     }

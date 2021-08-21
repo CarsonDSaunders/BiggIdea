@@ -18,17 +18,17 @@ const StyledSidebar = styled.div`
 
 export default function DashboardSidebar() {
     return (
-        <StyledSidebar class="sidebar-container">
-            <div class="my-account-container">
+        <StyledSidebar className="sidebar-container">
+            <div className="my-account-container">
                 <h3>My Account</h3>
-                <Options class="options-container">
+                <Options className="options-container">
                     <p>Change password</p>
                     <p>View account usage</p>
                 </Options>
             </div>
-            <div class="my-boards-container">
+            <div className="my-boards-container">
                 <h3>My Bigg Boards</h3>
-                <Options class="options-container">
+                <Options className="options-container">
                     <p>Add new board</p>
                     <p>View/edit boards</p>
                     <span>

@@ -12,7 +12,7 @@ module.exports = {
     searchHashtag: async (tagTerm) => {
         let params = {
             query: `#${tagTerm}`,
-            max_results: 30,
+            max_results: 50,
             "tweet.fields":
                 "attachments,author_id,created_at,entities,geo,id,lang,possibly_sensitive,source,text",
             "media.fields": "media_key,url,type,preview_image_url",
@@ -54,24 +54,5 @@ module.exports = {
             .catch((error) => {
                 console.error(error);
             });
-    },
-    getStream: async () => {
-        let params = {
-            "tweet.fields":
-                    "attachments,author_id,created_at,entities,geo,id,lang,possibly_sensitive,source,text",
-                    "media.fields": "media_key,url,type,preview_image_url",
-                    expansions: "attachments.media_keys"
-        };
-
-        const stream = client.stream('tweets/search/stream', params);
-
-        // Close the stream after 30s.
-        setTimeout(() => {
-            stream.close();
-        }, 1000);
-
-        for await (const { data } of stream) {
-            console.log(data);
-        }
     },
 };

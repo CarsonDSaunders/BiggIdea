@@ -83,7 +83,17 @@ export default class LoginCreation extends Component {
             username: this.state.usernameVal,
             password: this.state.passwordVal,
             passwordConfirm: this.state.passwordConfirmVal,
-        });
+        })
+        .then((response) => {
+            if (response.status === 200) {
+                this.setState({
+                    activeError: true,
+                    errorMessage: "Success",
+                });
+            } else {
+                console.log(response)
+            }
+        })
     }
 
     validateInput() {
