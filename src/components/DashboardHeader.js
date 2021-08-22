@@ -1,6 +1,6 @@
-import React from "react";
-import styled from "styled-components";
-import { useHistory } from "react-router-dom";
+import React from 'react';
+import styled from 'styled-components';
+import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 
 const Hamburger = styled.img`
@@ -21,28 +21,28 @@ const HeaderTitle = styled.h1`
 `;
 
 export default function DashboardHeader(props) {
-    let history = useHistory()
-    
+    let history = useHistory();
+
     function logoutUser() {
-        axios.delete('/logout')
-        .then((response) => {
+        axios.get('/logout').then((response) => {
             if (response.status === 200) {
-                history.push('/')        
+                setTimeout(() => {
+                    history.push('/');
+                }, 3000);
             } else {
-                return
+                return;
             }
-        })
+        });
     }
 
     return (
         <div>
             <HeaderBar>
-                <HeaderTitle>Bigg Idea</HeaderTitle>    
-                    <Hamburger
-                        className="hamburger"
-                        onClick={(e) => logoutUser()}
-                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Hamburger_icon.svg/1024px-Hamburger_icon.svg.png"
-                    ></Hamburger>
+                <HeaderTitle>Bigg Idea</HeaderTitle>
+                <Hamburger
+                    className='hamburger'
+                    onClick={(e) => logoutUser()}
+                    src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Hamburger_icon.svg/1024px-Hamburger_icon.svg.png'></Hamburger>
             </HeaderBar>
         </div>
     );

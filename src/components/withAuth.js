@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import { Redirect } from "react-router-dom";
-import axios from "axios";
+import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
+import axios from 'axios';
 
 export default function withAuth(ComponentToProtect) {
     return class extends Component {
@@ -14,9 +14,10 @@ export default function withAuth(ComponentToProtect) {
 
         componentDidMount() {
             axios
-                .get("/checkToken")
+                .get('/api/verify')
                 .then((res) => {
                     if (res.status === 200) {
+                        console.log('HELP ME');
                         this.setState({ loading: false });
                     } else {
                         const error = new Error(res.error);
@@ -34,7 +35,7 @@ export default function withAuth(ComponentToProtect) {
                 return null;
             }
             if (redirect) {
-                return <Redirect to="/" />;
+                return <Redirect to='/' />;
             }
             return <ComponentToProtect {...this.props} />;
         }

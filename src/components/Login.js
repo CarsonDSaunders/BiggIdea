@@ -1,7 +1,7 @@
-import React, { Component } from "react";
-import { Link, Redirect } from "react-router-dom";
-import styled from "styled-components";
-import axios from "axios";
+import React, { Component } from 'react';
+import { Link, Redirect } from 'react-router-dom';
+import styled from 'styled-components';
+import axios from 'axios';
 
 const LoginContainer = styled.div`
     width: 100%;
@@ -29,11 +29,11 @@ export default class Login extends Component {
         super(props);
 
         this.state = {
-            usernameVal: "",
-            passwordVal: "",
+            usernameVal: '',
+            passwordVal: '',
             passwordHidden: true,
             activeError: false,
-            errorMessage: "",
+            errorMessage: '',
         };
 
         this.updateUsername = this.updateUsername.bind(this);
@@ -62,36 +62,37 @@ export default class Login extends Component {
         event.preventDefault();
         this.setState({
             activeError: false,
-            errorMessage: "",
+            errorMessage: '',
         });
         axios
-            .post("/api/authenticate", {
+            .post('/api/authenticate', {
                 username: this.state.usernameVal,
                 password: this.state.passwordVal,
             })
             .then((response) => {
                 this.setState({
                     activeError: false,
-                    errorMessage: "",
+                    errorMessage: '',
                 });
-                const user = { ...response.data };
-                this.props.history.push('/dashboard')
+                this.props.history.push({
+                    pathname: '/dashboard',
+                });
             })
             .catch((err) => {
                 if (err.response.status === 406) {
                     this.setState({
                         activeError: true,
-                        errorMessage: "Please complete all fields",
+                        errorMessage: 'Please complete all fields',
                     });
                 } else if (err.response.status === 404) {
                     this.setState({
                         activeError: true,
-                        errorMessage: "User not found",
+                        errorMessage: 'User not found',
                     });
                 } else if (err.response.status === 403) {
                     this.setState({
                         activeError: true,
-                        errorMessage: "Invalid login credentials",
+                        errorMessage: 'Invalid login credentials',
                     });
                 }
             });
@@ -100,45 +101,45 @@ export default class Login extends Component {
     render() {
         return (
             <LoginContainer>
-                <div className="login-header">
+                <div className='login-header'>
                     <img
-                        src="https://biggidea.s3.us-west-1.amazonaws.com/Bigg+Idea+-+Logo+Text.png"
-                        alt="Logo"
+                        src='https://biggidea.s3.us-west-1.amazonaws.com/Bigg+Idea+-+Logo+Text.png'
+                        alt='Logo'
                     />
                 </div>
                 <LoginForm>
                     <input
-                        className="login-input"
-                        type="text"
+                        className='login-input'
+                        type='text'
                         value={this.state.usernameVal}
-                        placeholder="Username"
+                        placeholder='Username'
                         onChange={(e) => this.updateUsername(e.target.value)}
                     />
                     <input
-                        className="login-input"
-                        type={this.state.passwordHidden ? "password" : "text"}
+                        className='login-input'
+                        type={this.state.passwordHidden ? 'password' : 'text'}
                         value={this.state.passwordVal}
-                        placeholder="Password"
+                        placeholder='Password'
                         onChange={(e) => this.updatePassword(e.target.value)}
                     />
                     <div>
                         <input
-                            type="checkbox"
-                            id="passwordHide"
-                            name="passwordHide"
+                            type='checkbox'
+                            id='passwordHide'
+                            name='passwordHide'
                             checked={this.state.passwordHidden ? false : true}
                             value={
-                                this.state.passwordHidden ? "password" : "text"
+                                this.state.passwordHidden ? 'password' : 'text'
                             }
                             onChange={(e) =>
                                 this.togglePassword(e.target.checked)
                             }
                         />
-                        <label htmlFor="passwordHide">Show password</label>
+                        <label htmlFor='passwordHide'>Show password</label>
                     </div>
                     <button onClick={(e) => this.handleSubmit(e)}>Login</button>
                 </LoginForm>
-                <Link to="/create-account">
+                <Link to='/create-account'>
                     <h4>Create Account</h4>
                 </Link>
                 {this.state.activeError ? (
