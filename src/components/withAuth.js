@@ -17,7 +17,6 @@ export default function withAuth(ComponentToProtect) {
                 .get('/api/verify')
                 .then((res) => {
                     if (res.status === 200) {
-                        console.log('HELP ME');
                         this.setState({ loading: false });
                     } else {
                         const error = new Error(res.error);

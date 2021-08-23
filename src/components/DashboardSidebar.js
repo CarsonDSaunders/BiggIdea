@@ -2,13 +2,13 @@ import { React, useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 const AccountOptions = styled.div`
-    width: 10em;
+    width: 14em;
     height: 20vh;
     border: black solid 1px;
 `;
 
 const BoardOptions = styled.div`
-    width: 10em;
+    width: 14em;
     border: black solid 1px;
 `;
 
@@ -28,6 +28,10 @@ const ActiveOption = styled(SidebarOption)`
     font-weight: bold;
 `;
 
+const NonOption = styled(SidebarOption)`
+    cursor: default;
+`;
+
 const SidebarSubOption = styled.span`
     font-size: 1em;
     cursor: pointer;
@@ -39,7 +43,7 @@ const ActiveSubOption = styled(SidebarSubOption)`
 export default function DashboardSidebar(props) {
     const [activeOption, setActiveOption] = useState('board');
     const [activeBoard, setActiveBoard] = useState(0);
-    const [boardsList, setBoardsList] = useState();
+    const [boardsList, setBoardsList] = useState([]);
 
     function handleButtonClick(option, board) {
         setActiveOption(option);
@@ -52,9 +56,13 @@ export default function DashboardSidebar(props) {
         }
     }
 
-    async function useEffect() {
-        boardsList = props.boards;
-    }
+    useEffect(() => {
+        if (props.loading === true) {
+            return;
+        } else {
+            setBoardsList(props.userBoards);
+        }
+    });
 
     return (
         <StyledSidebar className='sidebar-container'>
@@ -78,12 +86,12 @@ export default function DashboardSidebar(props) {
                     {activeOption === 'usage' ? (
                         <ActiveOption
                             onClick={(e) => handleButtonClick('usage', null)}>
-                            View account usage
+                            View Account Usage
                         </ActiveOption>
                     ) : (
                         <SidebarOption
                             onClick={(e) => handleButtonClick('usage', null)}>
-                            View account usage
+                            View Account Usage
                         </SidebarOption>
                     )}
                     <br />
@@ -96,48 +104,52 @@ export default function DashboardSidebar(props) {
                     {activeOption === 'add' ? (
                         <ActiveOption
                             onClick={(e) => handleButtonClick('add', null)}>
-                            Add new board
+                            Add New Board
                         </ActiveOption>
                     ) : (
                         <SidebarOption
                             onClick={(e) => handleButtonClick('add', null)}>
-                            Add new board
+                            Add New Board
                         </SidebarOption>
                     )}
                     <br />
                     {activeOption === 'board' ? (
                         <ActiveOption
                             onClick={(e) => handleButtonClick('board', null)}>
-                            View/edit boards
+                            View/Edit Boards
                         </ActiveOption>
                     ) : (
                         <SidebarOption
                             onClick={(e) => handleButtonClick('board', null)}>
-                            View/edit boards
+                            View/Edit Boards
                         </SidebarOption>
                     )}
                     <br />
                     <span>
-                        {boardsList.map((board, index) => {
-                            activeOption === 'board' &&
-                            activeBoard === index ? (
-                                <ActiveSubOption
-                                    key={board.board_id}
-                                    onClick={(e) =>
-                                        handleButtonClick('board', index)
-                                    }>
-                                    {board.board_name}
-                                </ActiveSubOption>
-                            ) : (
-                                <SidebarSubOption
-                                    key={board.board_id}
-                                    onClick={(e) =>
-                                        handleButtonClick('board', index)
-                                    }>
-                                    {board.board_name}
-                                </SidebarSubOption>
-                            );
-                        })}
+                        {props.loading
+                            ? null
+                            : boardsList.map((board, index) => {
+                                  return activeOption === 'board' &&
+                                      activeBoard === index ? (
+                                      <ActiveSubOption
+                                          key={board.board_id}
+                                          onClick={(e) =>
+                                              handleButtonClick('board', index)
+                                          }>
+                                          {board.board_name}
+                                          <br />
+                                      </ActiveSubOption>
+                                  ) : (
+                                      <SidebarSubOption
+                                          key={board.board_id}
+                                          onClick={(e) =>
+                                              handleButtonClick('board', index)
+                                          }>
+                                          {board.board_name}
+                                          <br />
+                                      </SidebarSubOption>
+                                  );
+                              })}
                     </span>
                     <br />
                 </BoardOptions>

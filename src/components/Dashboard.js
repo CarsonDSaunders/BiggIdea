@@ -17,11 +17,23 @@ export default class Dashboard extends Component {
 
         this.state = {
             activePanel: 'board',
-            activeBoard: 1,
+            activeBoard: 0,
             data: {},
+            loading: true,
         };
         this.changePanelDisplay = this.changePanelDisplay.bind(this);
         this.changeBoard = this.changeBoard.bind(this);
+    }
+
+    componentDidMount() {
+        axios
+            .get(`/api/user/`)
+            .then((response) => {
+                this.setState({ data: response.data, loading: false });
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     }
 
     changePanelDisplay(panel) {
@@ -32,26 +44,26 @@ export default class Dashboard extends Component {
         this.setState({ activeBoard: board });
     }
 
-    async componentDidMount() {
-        axios.get(`/api/user/`).then((response) => {
-            console.log(response);
-            this.setState({ data: response.data });
-        });
-    }
-
     render() {
         return (
             <div>
-                <DashboardHeader />
+                <DashboardHeader
+                    activeUser={this.state.data.user}
+                    loading={this.state.loading}
+                />
                 <DashboardBody>
                     <DashboardSidebar
                         changePanelDisplay={this.changePanelDisplay}
                         changeBoard={this.changeBoard}
                         userBoards={this.state.data.boards}
+                        loading={this.state.loading}
                     />
                     <DashboardPanel
+                        activeUser={this.state.data.user}
+                        userBoards={this.state.data.boards}
                         activePanel={this.state.activePanel}
                         activeBoard={this.state.activeBoard}
+                        loading={this.state.loading}
                     />
                 </DashboardBody>
             </div>

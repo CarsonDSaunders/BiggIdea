@@ -3,16 +3,23 @@ const express = require('express');
 const cors = require('cors');
 const session = require('express-session');
 const bcrypt = require('bcryptjs');
-const users = require('../data/sampleUsers.json');
 const twitter = require('./controllers/Twitter');
 const massive = require('massive');
 const cookieParser = require('cookie-parser');
+const multer = require('multer');
 
 const app = express();
 const PORT = process.env.PORT || 8000;
 const secret = `${process.env.SESSION_SECRET}`;
 const saltRounds = 15;
-const tenSecs = 1000 * 60 * 10;
+
+//* AWS
+const AWS = require('aws-sdk');
+AWS.config.update({
+    accessKeyId: `${process.env.AWS_ACCESS_KEY_ID}`,
+    secretAccessKey: `${process.env.AWS_SECRET_ACCESS_KEY}`,
+    region: 'us-west-1',
+});
 
 //* Massive
 (async () => {
@@ -25,6 +32,7 @@ const tenSecs = 1000 * 60 * 10;
 
 //* Middleware
 app.use(express.json());
+app.use(cookieParser());
 app.use(cors());
 app.use(
     session({
@@ -34,8 +42,8 @@ app.use(
         cookie: { maxAge: 600000 },
     })
 );
-app.use(cookieParser());
 
+//* Verifies user before running logic in endpoints (back-end)
 function requireLogin(req, res, next) {
     if (req.session.user === undefined) {
         res.sendStatus(403);
@@ -44,25 +52,13 @@ function requireLogin(req, res, next) {
     }
 }
 
+//* Makes sure a user has a valid session before sending the correct route (front-end)
 app.get('/api/verify', requireLogin, (req, res) => {
     res.sendStatus(200);
 });
 
-//* Hashes passwords already in DB (for testing)
-const hashDbPasswords = async (req, res) => {
-    let userId = req.params.id;
-    const dbInstance = await req.app.get('db');
-    dbInstance.get_passwords(userId).then((passwords) => {
-        let currentPassword = 'HSBg2nwJ6n9';
-        bcrypt.hash(currentPassword, saltRounds, function (err, hash) {
-            dbInstance.update_password(hash, userId).then(() => {
-                res.status(200).send('Success!');
-            });
-        });
-    });
-};
-
-const authenticateUser = async (req, res, next) => {
+//* Login a user
+app.post('/api/authenticate', async (req, res) => {
     const { username, password } = req.body;
     if (username === '' && password === '') {
         res.sendStatus(406);
@@ -75,8 +71,10 @@ const authenticateUser = async (req, res, next) => {
             let hash = foundUser[0].password;
             bcrypt.compare(password, hash, function (err, authenticated) {
                 if (authenticated === true) {
-                    req.session.user = foundUser[0];
-                    res.sendStatus(200);
+                    dbInstance.session_new(foundUser[0]['user_id']).then(() => {
+                        req.session.user = foundUser[0];
+                        res.sendStatus(200);
+                    });
                 } else {
                     res.sendStatus(403);
                 }
@@ -85,13 +83,7 @@ const authenticateUser = async (req, res, next) => {
             res.sendStatus(404);
         }
     }
-};
-
-//* Sample Endpoint
-app.get('/passwords/:id', hashDbPasswords);
-
-//* Login a user
-app.post('/api/authenticate', authenticateUser);
+});
 
 //* Creates a user account
 app.post('/api/login/create', async (req, res) => {
@@ -110,7 +102,7 @@ app.post('/api/login/create', async (req, res) => {
             } else {
                 bcrypt.hash(password, saltRounds, function (err, hash) {
                     dbInstance
-                        .create_account(
+                        .user_create_account(
                             email,
                             firstName,
                             lastName,
@@ -134,9 +126,9 @@ app.get('/api/user/', async (req, res) => {
         boards: [],
     };
 
-    dbInstance.get_user(id).then((user) => {
+    dbInstance.user_get(id).then((user) => {
         Object.assign(allUserData.user, user[0]);
-        dbInstance.get_boards(allUserData.user.user_id).then((boards) => {
+        dbInstance.boards_get(allUserData.user.user_id).then((boards) => {
             let len = boards.length;
             for (let i = 0; i < len; i++) {
                 let query = {
@@ -170,6 +162,15 @@ app.get('/api/user/', async (req, res) => {
     });
 });
 
+//* Retrieves a user's history of sessions
+app.get('/api/sessions/', requireLogin, async (req, res) => {
+    const dbInstance = await req.app.get('db');
+    const id = req.session.user['user_id'];
+    dbInstance.session_get(id).then((sessions) => {
+        res.status(200).send(sessions);
+    });
+});
+
 //* Updates a user's password
 app.put('/account', requireLogin, (req, res) => {});
 
@@ -184,6 +185,41 @@ app.get('/logout', requireLogin, (req, res) => {
     });
 });
 
+//* Upload new user avatar
+app.post(
+    '/api/images/user/:id',
+    requireLogin,
+    multer().single('image'),
+    async (req, res) => {
+        const userId = req.params.id;
+        let s3 = new AWS.S3({ apiVersion: '2006-03-01' });
+        let file = req.file;
+        var params = {
+            Bucket: 'biggidea',
+            Body: file.buffer,
+            Key: `avatars/${file.originalname}`,
+        };
+
+        s3.upload(params, async (err, data) => {
+            //handle error
+            if (err) {
+                console.log('Error', err);
+                res.sendStatus(409);
+            }
+            //success
+            if (data) {
+                let newUrl = data.Location;
+                const dbInstance = await req.app.get('db');
+                dbInstance
+                    .user_change_avatar(userId, newUrl)
+                    .then((response) => {
+                        res.sendStatus(200);
+                    });
+            }
+        });
+    }
+);
+
 //* Creates a new board using provided info
 app.post('/boards', requireLogin);
 
@@ -193,6 +229,7 @@ app.put('/boards/:id', requireLogin);
 //* Deletes the specified board
 app.delete('/boards/:id', requireLogin);
 
+//* Searches Twitter
 app.get('/api/social/twitter/:term', async (req, res) => {
     let { term } = req.params;
     let searchType = req.query.type;

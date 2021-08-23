@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 
@@ -60,6 +60,7 @@ export default class Login extends Component {
 
     handleSubmit(event) {
         event.preventDefault();
+        event.target.style = 'opacity: 40%';
         this.setState({
             activeError: false,
             errorMessage: '',
@@ -70,6 +71,7 @@ export default class Login extends Component {
                 password: this.state.passwordVal,
             })
             .then((response) => {
+                event.target.style = 'opacity: 100%';
                 this.setState({
                     activeError: false,
                     errorMessage: '',
@@ -79,6 +81,7 @@ export default class Login extends Component {
                 });
             })
             .catch((err) => {
+                event.target.style = 'opacity: 100%';
                 if (err.response.status === 406) {
                     this.setState({
                         activeError: true,
@@ -103,7 +106,7 @@ export default class Login extends Component {
             <LoginContainer>
                 <div className='login-header'>
                     <img
-                        src='https://biggidea.s3.us-west-1.amazonaws.com/Bigg+Idea+-+Logo+Text.png'
+                        src='https://biggidea.s3.us-west-1.amazonaws.com/Logo_Text.png'
                         alt='Logo'
                     />
                 </div>

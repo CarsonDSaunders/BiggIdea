@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import Manage from './Manage';
+import Usage from './Usage';
+import Editor from './Editor';
 
 const EditorContainer = styled.div`
     border: 3px solid black;
@@ -30,27 +33,38 @@ export default function DashboardPanel(props) {
         }
     }
 
+    function renderPanelContent() {
+        switch (props.activePanel) {
+            case 'manage':
+                return (
+                    <Manage
+                        userData={props.activeUser}
+                        loading={props.loading}
+                    />
+                );
+            case 'usage':
+                return <Usage userData={props.activeUser} />;
+            case 'add':
+                return 'Add';
+            case 'board':
+                return (
+                    <Editor
+                        userBoards={props.userBoards}
+                        userData={props.activeUser}
+                        activeBoard={props.activeBoard}
+                        loading={props.loading}
+                    />
+                );
+            default:
+                return 'Manage Account';
+                break;
+        }
+    }
+
     return (
         <Panel>
             <h2 style={{ marginLeft: '500px' }}>{renderPanelTitle()}</h2>
-            {
-                <EditorContainer>
-                    <div>
-                        <p>
-                            <strong>Board Title:</strong> {'Homepage Board'}
-                        </p>
-                        <p>
-                            <strong>Board ID:</strong> {props.boardId}
-                        </p>
-                        <p>
-                            <strong>Creation Date:</strong> {'7/4/21'}
-                        </p>
-                    </div>
-                    <Link to={`/boards/${props.boardId}/preview`}>
-                        <p>Preview Board</p>
-                    </Link>
-                </EditorContainer>
-            }
+            <EditorContainer>{renderPanelContent()}</EditorContainer>
         </Panel>
     );
 }
