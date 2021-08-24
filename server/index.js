@@ -32,6 +32,7 @@ AWS.config.update({
 
 //* Middleware
 app.use(express.json());
+app.use(express.static('public'));
 app.use(cookieParser());
 app.use(cors());
 app.use(
