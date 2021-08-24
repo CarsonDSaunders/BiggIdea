@@ -86,6 +86,10 @@ app.post('/api/authenticate', async (req, res) => {
     }
 });
 
+app.get('/', function (req, res) {
+    res.redirect('/');
+});
+
 //* Creates a user account
 app.post('/api/login/create', async (req, res) => {
     const dbInstance = await req.app.get('db');
