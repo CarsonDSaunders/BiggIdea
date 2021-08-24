@@ -5,3 +5,56 @@ DashboardSidebar {
 DashboardHeader {
     clear: both;
 }
+
+.standard-btn {
+    transition: all 0.3s ease;
+    overflow: hidden;
+    width: 10em;
+    height: 5em;
+    padding: 1em;
+    border: 2px solid #000;
+    font-family: 'Lato', sans-serif;
+    font-weight: 500;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    display: inline-block;
+
+    @media (max-width: 1024px) {
+        width: 5em;
+        height: 2.5em;
+        margin: 0;
+    }
+}
+
+.standard-btn:after {
+    position: absolute;
+    content: ' ';
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    transition: all 0.3s ease;
+    -webkit-transform: scale(0.1);
+    transform: scale(0.1);
+}
+
+.standard-btn:hover {
+    color: #fff;
+}
+
+.standard-btn:hover:after {
+    background: #253031;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+}
+
+button {
+    margin: 20px;
+    outline: none;
+}
+
+input {
+}

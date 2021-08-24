@@ -1,31 +1,54 @@
-import React, { Component } from "react";
-import styled from "styled-components";
+import React, { Component } from 'react';
+import styled from 'styled-components';
+import '../assets/styles/hovered.css';
 
-const Item = styled.button`
+const ItemCard = styled.button`
     border: 2px solid darkGray;
-    margin: 1em;
+    margin: 1em 0.3em;
     overflow: hidden;
+    height: 25em;
+    width: 25em;
+    border-radius: 1em;
     padding: 1em;
+    background-color: #00471b;
 `;
+
+const ImageCard = styled(ItemCard)`
+    padding: 0;
+`;
+
 const TextContainer = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: flex-start;
-    height: 20em;
-    width: 20em;
 `;
 
-const PostText = styled.p`
+const DarkPostText = styled.p`
     text-align: left;
-    color: color-constrast(black vs white, gray, darkgray, lightgray);
-    font-weight: bold;
-    font-size: 16px;
+    font-size: large;
+    color: black;
+    font-weight: 400;
 `;
 
-const PostDate = styled.p`
+const LightPostText = styled(DarkPostText)`
+    color: white;
+`;
+
+const DarkPostDate = styled.p`
     text-align: left bottom;
-    color: color-constrast(black vs white, gray, darkgray, lightgray);
+    color: black;
+    float: left;
+`;
+
+const LightPostDate = styled(DarkPostDate)`
+    color: white;
+`;
+
+const EmbeddedImage = styled.img`
+    height: 100%;
+    width: auto;
+    margin: 0;
 `;
 
 export default class BoardItem extends Component {
@@ -33,78 +56,103 @@ export default class BoardItem extends Component {
         super(props);
 
         this.state = {
-            colors: ["#002B5C", "#00471B", "#F9A01B"],
+            hovered: false,
         };
 
         this.formatDate = this.formatDate.bind(this);
-        this.getBackground = this.getBackground.bind(this);
         this.displayTweet = this.displayTweet.bind(this);
+        this.flipImageCard = this.flipImageCard.bind(this);
     }
 
     formatDate(date) {
         const postDate = new Date(date);
         const nowDate = new Date();
         let final = 0;
-        let unit = "";
+        let unit = '';
         let elapsed = nowDate.getTime() - postDate.getTime();
         if (elapsed < 3600000) {
             final = Math.floor(elapsed / 60000); //mins
-            unit = final === 1 ? "minute" : "minutes";
+            unit = final === 1 ? 'minute' : 'minutes';
         } else if (elapsed < 86400000) {
             final = Math.floor(elapsed / 3600000); //hours
-            unit = final === 1 ? "hour" : "hours";
+            unit = final === 1 ? 'hour' : 'hours';
         } else if (elapsed < 2678000000) {
             final = Math.floor(elapsed / 86400000); //days
-            unit = final === 1 ? "day" : "days";
+            unit = final === 1 ? 'day' : 'days';
         } else if (elapsed < 31540000000) {
             final = Math.floor(elapsed / 2678000000); //months
-            unit = final === 1 ? "month" : "months";
+            unit = final === 1 ? 'month' : 'months';
         } else {
             final = Math.floor(elapsed / 31540000000); //years
-            unit = final === 1 ? "year" : "years";
+            unit = final === 1 ? 'year' : 'years';
         }
 
         return `${final} ${unit} ago`;
     }
 
-    getBackground() {
-        if (this.props.post.attachments) {
-            if (this.props.post.attachments.media_keys) {
-                let mediaArr = this.props.media;
-                let bgKey = this.props.post.attachments.media_keys[0];
-                let media = mediaArr.find((ele) => ele.media_key === bgKey);
-                if (media.type === "photo") {
-                    return `url(${media.url})`;
-                } else {
-                    return `white`;
-                }
-            }
+    displayTweet(e) {
+        e.preventDefault();
+        this.props.expandTweet(this.props.post);
+    }
+
+    flipImageCard(ele) {
+        if (this.state.hovered === true) {
+            this.setState({ hovered: false });
         } else {
-            let colorArr = this.state.colors;
-            return colorArr[Math.floor(Math.random() * colorArr.length)];
+            this.setState({ hovered: true });
         }
     }
 
-    displayTweet(e) {
-        e.preventDefault();
-        window.alert("Displaying tweet");
-    }
-
     render() {
-        return (
-            <div>
-                <Item
-                    onClick={(e) => this.displayTweet(e)}
-                    style={{ background: this.getBackground() }}
-                >
-                    <TextContainer>
-                        <PostText>{this.props.post.text}</PostText>
-                        <PostText>
-                            {this.formatDate(this.props.post.created_at)}
-                        </PostText>
-                    </TextContainer>
-                </Item>
-            </div>
-        );
+        if (this.props.media) {
+            let mediaUrl = '';
+            if (this.props.media.type === 'photo') {
+                mediaUrl = this.props.media.url;
+            } else {
+                mediaUrl = this.props.media.preview_image_url;
+            }
+            return (
+                <div>
+                    <ImageCard
+                        className={this.state.hovered ? 'hovered' : null}
+                        onClick={(e) => this.displayTweet(e)}
+                        onMouseEnter={(e) => this.flipImageCard(e.target)}
+                        onMouseLeave={(e) => this.flipImageCard(e.target)}>
+                        {this.state.hovered ? (
+                            <div
+                                style={{
+                                    padding: '1em',
+                                }}>
+                                <LightPostText>
+                                    {this.props.post.text}
+                                </LightPostText>
+                                <LightPostDate>
+                                    {this.formatDate(
+                                        this.props.post.created_at
+                                    )}
+                                </LightPostDate>
+                            </div>
+                        ) : (
+                            <EmbeddedImage src={mediaUrl} />
+                        )}
+                    </ImageCard>
+                </div>
+            );
+        } else {
+            return (
+                <div>
+                    <ItemCard onClick={(e) => this.displayTweet(e)}>
+                        <TextContainer>
+                            <LightPostText>
+                                {this.props.post.text}
+                            </LightPostText>
+                            <LightPostDate>
+                                {this.formatDate(this.props.post.created_at)}
+                            </LightPostDate>
+                        </TextContainer>
+                    </ItemCard>
+                </div>
+            );
+        }
     }
 }

@@ -1,10 +1,32 @@
 import axios from 'axios';
 import { React, useState, useEffect } from 'react';
 import styled from 'styled-components';
+import '../assets/styles/dashboard.css';
 
 const AvatarPreview = styled.img`
     height: 8em;
     width: 8em;
+    margin-left: 0.5em;
+    border: 1px lightgray solid;
+    border-radius: 50%;
+`;
+
+const AvatarBlock = styled.span`
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+`;
+
+const TextBlock = styled.span`
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+`;
+
+const ChangeAvatarButton = styled.button`
+    margin-top: 1em;
 `;
 
 export default function Manage(props) {
@@ -53,32 +75,38 @@ export default function Manage(props) {
     return (
         <div>
             <div>
-                <p>
-                    <strong>Email:</strong>
-                    {email}
-                </p>
+                <TextBlock>
+                    <strong>Email: </strong>
+                    <p style={{ marginLeft: '0.5em' }}>{email}</p>
+                </TextBlock>
+
                 <p>
                     <strong>New Password:</strong>
-                    <input type='password'></input>
+                    <input
+                        style={{ marginLeft: '0.5em' }}
+                        type='password'></input>
                 </p>
-                <button>Change Password</button>
-                <p>
+                <button className='standard-btn'>Change Password</button>
+                <hr />
+                <AvatarBlock>
                     <strong>Avatar:</strong>
                     {props.loading ? (
                         <h2>A</h2>
                     ) : (
                         <AvatarPreview src={`${props.userData.avatar}`} />
                     )}
-                </p>
+                </AvatarBlock>
                 <div>
                     <input
                         type='file'
                         accept='image/png, image/jpeg'
                         onChange={(e) => handleSelectAvatarFile(e)}></input>
                 </div>
-                <button onClick={() => handleUploadAvatarFile()}>
+                <ChangeAvatarButton
+                    className='standard-btn'
+                    onClick={() => handleUploadAvatarFile()}>
                     Change Avatar
-                </button>
+                </ChangeAvatarButton>
             </div>
         </div>
     );

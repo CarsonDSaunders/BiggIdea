@@ -9,11 +9,18 @@ const EditorContainer = styled.div`
     border: 3px solid black;
     width: 50vw;
     margin-left: 500px;
+    padding: 1em;
 `;
 
 const Panel = styled.div`
     height: 80vh;
     width: auto;
+`;
+
+const PanelTitle = styled.h2`
+    margin: 0 0 0 500px;
+    font-size: 3em;
+    color: #2978a0;
 `;
 
 export default function DashboardPanel(props) {
@@ -61,7 +68,9 @@ export default function DashboardPanel(props) {
 
     return (
         <Panel>
-            <h2 style={{ marginLeft: '500px' }}>{renderPanelTitle()}</h2>
+            <PanelTitle style={{ marginLeft: '500px' }}>
+                {renderPanelTitle()}
+            </PanelTitle>
             <EditorContainer>{renderPanelContent()}</EditorContainer>
         </Panel>
     );

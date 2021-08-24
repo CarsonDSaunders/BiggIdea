@@ -7,7 +7,7 @@ import '../assets/styles/dashboard.css';
 import styled from 'styled-components';
 
 const DashboardBody = styled.div`
-    padding: 0 3em;
+    margin: 0;
     height: 90%;
     width: 100%;
 `;

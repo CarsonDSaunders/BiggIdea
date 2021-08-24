@@ -257,6 +257,14 @@ app.put('/api/boards/:id', requireLogin, async (req, res) => {
         });
 });
 
+app.get('/api/boards/:id', requireLogin, async (req, res) => {
+    const boardId = req.params.id;
+    const dbInstance = await req.app.get('db');
+    dbInstance.boards_retrieve(boardId).then((result) => {
+        res.status(200).send(result);
+    });
+});
+
 //* Deletes the specified board
 app.delete('/boards/:id', requireLogin);
 
@@ -266,10 +274,29 @@ app.get('/api/social/twitter/:term', async (req, res) => {
     let searchType = req.query.type;
     if (searchType === 'hashtag') {
         let searchResults = await twitter.searchHashtag(term);
-        res.status(200).send(searchResults);
+        if (searchResults) {
+            res.status(200).send(searchResults);
+        } else {
+            res.status(404).send('Unable to find Tweets with that hashtag!');
+        }
     } else {
-        // let searchResults = await twitter.searchHashtag(term)
-        // res.status(200).send(searchResults)
+        let searchResults = await twitter.searchAccount(term);
+        if (searchResults) {
+            res.status(200).send(searchResults);
+        } else {
+            res.status(404).send('Unable to find Twitter Account!');
+        }
+    }
+});
+
+//* Embeds Tweet
+app.get('/api/social/twitter/embed', async (req, res) => {
+    let tweetUrl = req.query.url;
+    let embeddedTweet = await twitter.embedTweet(tweetUrl);
+    if (embeddedTweet) {
+        res.status(200).send(embeddedTweet);
+    } else {
+        res.status(404).send('Unable to embed tweet!');
     }
 });
 

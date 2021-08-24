@@ -1,27 +1,42 @@
 import { React, useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-const AccountOptions = styled.div`
-    width: 14em;
-    height: 20vh;
-    border: black solid 1px;
-`;
-
-const BoardOptions = styled.div`
-    width: 14em;
-    border: black solid 1px;
-`;
-
 const StyledSidebar = styled.div`
     float: left;
     display: flex;
     flex-direction: column;
     height: 100vh;
+    width: 15em;
+    background-color: #253031;
+    padding: 0 2em;
+    box-sizing: border-box;
+    margin: 0;
+`;
+
+const AccountOptions = styled.div`
+    width: 14em;
+    height: 10%;
+    display: flex;
+    flex-direction: column;
+    justify-content: baseline;
+    align-items: flex-start;
+    margin-bottom: 1em;
+`;
+
+const BoardOptions = styled.div`
+    width: 14em;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: baseline;
+    align-items: flex-start;
+    margin-bottom: 1em;
 `;
 
 const SidebarOption = styled.span`
     font-size: 1.3em;
     cursor: pointer;
+    color: lightgray;
 `;
 
 const ActiveOption = styled(SidebarOption)`
@@ -35,9 +50,19 @@ const NonOption = styled(SidebarOption)`
 const SidebarSubOption = styled.span`
     font-size: 1em;
     cursor: pointer;
+    color: lightgray;
+    margin-right: 1em;
 `;
 const ActiveSubOption = styled(SidebarSubOption)`
     font-weight: bold;
+`;
+
+const BoxTitle = styled.h3`
+    color: #2978a0;
+`;
+
+const Divider = styled.hr`
+    width: 90%;
 `;
 
 export default function DashboardSidebar(props) {
@@ -67,7 +92,7 @@ export default function DashboardSidebar(props) {
     return (
         <StyledSidebar className='sidebar-container'>
             <div className='my-account-container'>
-                <h3>My Account</h3>
+                <BoxTitle>My Account</BoxTitle>
                 <AccountOptions className='options-container'>
                     <br />
                     {activeOption === 'manage' ? (
@@ -97,8 +122,9 @@ export default function DashboardSidebar(props) {
                     <br />
                 </AccountOptions>
             </div>
+            <Divider />
             <div className='my-boards-container'>
-                <h3>My Bigg Boards</h3>
+                <BoxTitle>My Bigg Boards</BoxTitle>
                 <BoardOptions className='options-container'>
                     <br />
                     {activeOption === 'add' ? (
@@ -113,9 +139,9 @@ export default function DashboardSidebar(props) {
                         </SidebarOption>
                     )}
                     <br />
-                    <NonOption>Boards:</NonOption>
-                    <br />
-                    <span>
+                    <div>
+                        <NonOption>Boards:</NonOption>
+                        <br />
                         {props.loading
                             ? null
                             : boardsList.map((board, index) => {
@@ -140,8 +166,7 @@ export default function DashboardSidebar(props) {
                                       </SidebarSubOption>
                                   );
                               })}
-                    </span>
-                    <br />
+                    </div>
                 </BoardOptions>
             </div>
         </StyledSidebar>

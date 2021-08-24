@@ -26,12 +26,17 @@ export default function Usage() {
                 {sessionsArr.length}
             </p>
             <ul>
-                {sessionsArr.map((ele) => {
-                    const date = new Date(ele['login_info']);
-                    let formatted = date.toLocaleString();
-                    return (
-                        <li key={ele['session_id']}>{`${formatted} GMT`}</li>
-                    );
+                {sessionsArr.map((ele, i) => {
+                    if (i < 20) {
+                        const date = new Date(ele['login_info']);
+                        let formatted = date.toLocaleString();
+                        return (
+                            <li
+                                key={
+                                    ele['session_id']
+                                }>{`${formatted} GMT`}</li>
+                        );
+                    }
                 })}
             </ul>
         </div>

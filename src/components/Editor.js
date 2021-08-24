@@ -67,7 +67,8 @@ export default class Editor extends Component {
                         updatedBoard
                     )
                     .then((response) => {
-                        console.log(response);
+                        window.location.reload();
+                        return;
                     })
                     .catch((error) => {
                         console.error(error);

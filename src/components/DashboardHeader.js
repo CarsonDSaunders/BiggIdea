@@ -2,22 +2,38 @@ import { React, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
+import '../assets/font-awesome-4.7.0/css/font-awesome.min.css';
 
-const Hamburger = styled.img`
-    width: 3em;
-    height: 3em;
-    display: inline;
-    cursor: pointer;
-`;
 const HeaderBar = styled.header`
     width: 100%;
-    height: 10em;
+    height: 5em;
     display: flex;
     justify-content: space-between;
+    border-bottom: 1px solid lightgray;
+    background-color: #253031;
 `;
 
 const HeaderTitle = styled.img`
     display: inline-block;
+    height: 100%;
+    margin-left: 2em;
+`;
+
+const TopRight = styled.div`
+    height: 100%;
+    width: 15%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+`;
+
+const User = styled(TopRight)`
+    width: 10em;
+    height: 80%;
+    background-color: #d4cec4;
+    border-radius: 1em;
+    padding: 0 1em;
 `;
 
 const Avatar = styled.img`
@@ -26,6 +42,9 @@ const Avatar = styled.img`
     border-radius: 50%;
 `;
 
+const LogOut = styled.i`
+    cursor: pointer;
+`;
 export default function DashboardHeader(props) {
     let history = useHistory();
     let [avatarUrl, setAvatar] = useState(
@@ -45,29 +64,29 @@ export default function DashboardHeader(props) {
     }
 
     return (
-        <div>
-            <HeaderBar>
-                <HeaderTitle src='https://biggidea.s3.us-west-1.amazonaws.com/Logo_Header.png' />
-                <div>
-                    <div>
-                        {props.loading ? (
-                            <h2>A</h2>
-                        ) : (
-                            <Avatar src={`${props.activeUser.avatar}`} />
-                        )}
-                        <h2>
-                            {props.loading
-                                ? 'Loading User'
-                                : props.activeUser['first_name']}
-                        </h2>
-                    </div>
-                    <Hamburger
-                        className='hamburger'
+        <HeaderBar>
+            <HeaderTitle src='https://biggidea.s3.us-west-1.amazonaws.com/Logo_Header.png' />
+            <TopRight>
+                <User>
+                    {props.loading ? (
+                        <h2>...</h2>
+                    ) : (
+                        <Avatar src={`${props.activeUser.avatar}`} />
+                    )}
+                    <h2>
+                        {props.loading
+                            ? 'Loading User'
+                            : props.activeUser['first_name']}
+                    </h2>
+                </User>
+                <span>
+                    <LogOut
+                        className='fa fa-sign-out fa-3x'
+                        aria-hidden='true'
                         onClick={(e) => logoutUser()}
-                        src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Hamburger_icon.svg/1024px-Hamburger_icon.svg.png'
                     />
-                </div>
-            </HeaderBar>
-        </div>
+                </span>
+            </TopRight>
+        </HeaderBar>
     );
 }

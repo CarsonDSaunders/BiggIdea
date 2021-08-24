@@ -13,17 +13,35 @@ const LoginContainer = styled.div`
 `;
 
 const LoginForm = styled.form`
-    width: 100%;
-    height: auto;
+    width: auto;
+    height: 60vh;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
+    border: 3px solid lightgray;
+    border-radius: 1em;
+    padding: 1em 5em;
 `;
 
 const ErrorMessage = styled.p`
     color: red;
     font-size: 2em;
+`;
+
+const Field = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+`;
+
+const FieldName = styled.strong`
+    font-size: 1.5em;
+`;
+
+const FieldInput = styled.input`
+    margin-left: 2em;
 `;
 export default class LoginCreation extends Component {
     constructor(props) {
@@ -49,6 +67,7 @@ export default class LoginCreation extends Component {
         this.sendRequest = this.sendRequest.bind(this);
         this.validateInput = this.validateInput.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.backToLogin = this.backToLogin.bind(this);
     }
 
     updateEmail(val) {
@@ -137,67 +156,96 @@ export default class LoginCreation extends Component {
         }
     }
 
+    backToLogin() {
+        this.props.history.push('/');
+    }
+
     render() {
         return (
             <LoginContainer>
                 <div className='login-creation-header'>
-                    <h1 className='logo'>Bigg Idea</h1>
+                    <img
+                        style={{ cursor: 'pointer' }}
+                        src='https://biggidea.s3.us-west-1.amazonaws.com/Logo_Header.png'
+                        onClick={() => this.backToLogin()}
+                    />
                 </div>
                 <LoginForm>
-                    <p>Email:</p>
-                    <input
-                        className='login-creation-input'
-                        type='email'
-                        placeholder='Email'
-                        value={this.state.emailVal}
-                        onChange={(e) => this.updateEmail(e.target.value)}
-                    />
-                    <p>First Name:</p>
-                    <input
-                        className='login-creation-input'
-                        type='text'
-                        placeholder='First Name'
-                        value={this.state.firstNameVal}
-                        onChange={(e) => this.updateFirstName(e.target.value)}
-                    />
-                    <p>Last Name:</p>
-                    <input
-                        className='login-creation-input'
-                        type='text'
-                        placeholder='Last Name'
-                        value={this.state.lastNameVal}
-                        onChange={(e) => this.updateLastName(e.target.value)}
-                    />
-                    <p>Username:</p>
-                    <input
-                        className='login-creation-input'
-                        type='text'
-                        placeholder='Username'
-                        value={this.state.usernameVal}
-                        onChange={(e) => this.updateUsername(e.target.value)}
-                    />
-                    <p>Password:</p>
-                    <input
-                        className='login-creation-input'
-                        type='text'
-                        placeholder='Password'
-                        value={this.state.passwordVal}
-                        onChange={(e) => this.updatePassword(e.target.value)}
-                    />
-                    <p>Confirm Password:</p>
-                    <input
-                        className='login-creation-input'
-                        type='text'
-                        placeholder='Confirm Password'
-                        value={this.state.passwordConfirmVal}
-                        onChange={(e) =>
-                            this.updatePasswordConfirm(e.target.value)
-                        }
-                    />
+                    <Field>
+                        <FieldName>Email:</FieldName>
+                        <FieldInput
+                            className='login-creation-input'
+                            type='email'
+                            placeholder='Email'
+                            value={this.state.emailVal}
+                            onChange={(e) => this.updateEmail(e.target.value)}
+                        />
+                    </Field>
+                    <Field>
+                        <FieldName>First Name:</FieldName>
+                        <FieldInput
+                            className='login-creation-input'
+                            type='text'
+                            placeholder='First Name'
+                            value={this.state.firstNameVal}
+                            onChange={(e) =>
+                                this.updateFirstName(e.target.value)
+                            }
+                        />
+                    </Field>
+                    <Field>
+                        <FieldName>Last Name:</FieldName>
+                        <FieldInput
+                            className='login-creation-input'
+                            type='text'
+                            placeholder='Last Name'
+                            value={this.state.lastNameVal}
+                            onChange={(e) =>
+                                this.updateLastName(e.target.value)
+                            }
+                        />
+                    </Field>
+                    <Field>
+                        <FieldName>Username:</FieldName>
+                        <FieldInput
+                            className='login-creation-input'
+                            type='text'
+                            placeholder='Username'
+                            value={this.state.usernameVal}
+                            onChange={(e) =>
+                                this.updateUsername(e.target.value)
+                            }
+                        />
+                    </Field>
+                    <Field>
+                        <FieldName>Password:</FieldName>
+                        <FieldInput
+                            className='login-creation-input'
+                            type='text'
+                            placeholder='Password'
+                            value={this.state.passwordVal}
+                            onChange={(e) =>
+                                this.updatePassword(e.target.value)
+                            }
+                        />
+                    </Field>
+                    <Field>
+                        <FieldName>Confirm Password:</FieldName>
+                        <FieldInput
+                            className='login-creation-input'
+                            type='text'
+                            placeholder='Confirm Password'
+                            value={this.state.passwordConfirmVal}
+                            onChange={(e) =>
+                                this.updatePasswordConfirm(e.target.value)
+                            }
+                        />
+                    </Field>
+
                     <Link to='/'>
                         <button
                             type='submit'
-                            className='login-creation-submit'
+                            className='login-creation-submit standard-btn'
                             onClick={(e) => this.handleSubmit(e)}>
                             Create Account
                         </button>
