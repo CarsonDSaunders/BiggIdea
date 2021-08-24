@@ -7,24 +7,14 @@ export default class Editor extends Component {
         super(props);
 
         this.state = {
-            boardName: this.props.board['board_name'],
-            twitterQueryText: this.props.board.queries[0]['query_text'],
-            twitterQueryMode: this.props.board.queries[0]['capture_mode'],
+            boardName: '',
+            twitterQueryText: '',
+            twitterQueryMode: 'hashtag',
             boardNameError: false,
             queryTextError: false,
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
-    }
-
-    componentDidUpdate(prevProps) {
-        if (prevProps.board['board_id'] !== this.props.board['board_id']) {
-            this.setState({
-                boardName: this.props.board['board_name'],
-                twitterQueryText: this.props.board.queries[0]['query_text'],
-                twitterQueryMode: this.props.board.queries[0]['capture_mode'],
-            });
-        }
     }
 
     handleInputChange(field, value) {
@@ -54,24 +44,19 @@ export default class Editor extends Component {
                 return;
             } else {
                 this.setState({ queryTextError: false });
-                let updatedBoard = { ...this.props.board };
-                updatedBoard['board_name'] = this.state.boardName;
-                updatedBoard.queries[0]['query_text'] =
-                    this.state.twitterQueryText;
-                updatedBoard.queries[0]['capture_mode'] =
-                    this.state.twitterQueryMode;
-
-                axios
-                    .put(
-                        `/api/boards/${updatedBoard['board_id']}`,
-                        updatedBoard
-                    )
-                    .then((response) => {
-                        console.log(response);
-                    })
-                    .catch((error) => {
-                        console.error(error);
-                    });
+                let payload = {
+                    board_name: this.state.boardName,
+                    platform_id: 0,
+                    query_text: this.state.twitterQueryText,
+                    capture_mode: this.state.twitterQueryMode,
+                };
+                axios.post(`/api/boards/`, payload).then((response) => {
+                    if (response.status === 200) {
+                        window.location.reload();
+                    } else {
+                        console.log('Unsuccessful');
+                    }
+                });
             }
         }
     }
@@ -90,26 +75,6 @@ export default class Editor extends Component {
                     />
                     <br />
                 </span>
-                <span>
-                    <strong>Board ID: </strong>
-                    <p>{this.props.board['board_id']}</p>
-                </span>
-                <br />
-                <span>
-                    <strong>Creation Date: </strong>
-                    <p>{this.props.board['creation_date']}</p>
-                </span>
-                <br />
-                <span>
-                    <Link
-                        to={{
-                            pathname: `/boards/${this.props.board['board_id']}/preview`,
-                            state: { board: this.props.board },
-                        }}>
-                        Preview Board
-                    </Link>
-                </span>
-                <br />
                 <form>
                     <strong>Twitter: </strong>
                     <input
@@ -146,7 +111,7 @@ export default class Editor extends Component {
                     </div>
                 </form>
                 <button onClick={() => this.handleClickButton()}>
-                    Save Changes
+                    Add Board
                 </button>
             </div>
         );

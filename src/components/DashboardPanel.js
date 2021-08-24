@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import Manage from './Manage';
 import Usage from './Usage';
 import Editor from './Editor';
+import Add from './Add';
 
 const EditorContainer = styled.div`
     border: 3px solid black;
@@ -45,16 +45,14 @@ export default function DashboardPanel(props) {
             case 'usage':
                 return <Usage userData={props.activeUser} />;
             case 'add':
-                return 'Add';
+                return <Add />;
             case 'board':
-                return (
-                    <Editor
-                        userBoards={props.userBoards}
-                        userData={props.activeUser}
-                        activeBoard={props.activeBoard}
-                        loading={props.loading}
-                    />
+                return props.loading ? (
+                    <h2>Loading Board</h2>
+                ) : (
+                    <Editor board={props.userBoards[props.activeBoard]} />
                 );
+
             default:
                 return 'Manage Account';
                 break;

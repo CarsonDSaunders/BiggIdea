@@ -113,17 +113,7 @@ export default function DashboardSidebar(props) {
                         </SidebarOption>
                     )}
                     <br />
-                    {activeOption === 'board' ? (
-                        <ActiveOption
-                            onClick={(e) => handleButtonClick('board', null)}>
-                            View/Edit Boards
-                        </ActiveOption>
-                    ) : (
-                        <SidebarOption
-                            onClick={(e) => handleButtonClick('board', null)}>
-                            View/Edit Boards
-                        </SidebarOption>
-                    )}
+                    <NonOption>Boards:</NonOption>
                     <br />
                     <span>
                         {props.loading

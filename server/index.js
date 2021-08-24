@@ -221,10 +221,41 @@ app.post(
 );
 
 //* Creates a new board using provided info
-app.post('/boards', requireLogin);
+app.post('/api/boards', requireLogin, async (req, res) => {
+    const userId = req.session.user['user_id'];
+    console.log(req.body);
+    let payload = req.body;
+    const dbInstance = await req.app.get('db');
+    dbInstance.boards_add(userId, payload['board_name']).then((result) => {
+        let boardId = result[0]['board_id'];
+        dbInstance
+            .queries_add(
+                boardId,
+                payload['query_text'],
+                payload['capture_mode']
+            )
+            .then(() => {
+                res.sendStatus(200);
+            });
+    });
+});
 
 //* Updates a board’s capture mode & associated platform queries
-app.put('/boards/:id', requireLogin);
+app.put('/api/boards/:id', requireLogin, async (req, res) => {
+    const { id } = req.params;
+    let updatedBoard = req.body;
+    const dbInstance = await req.app.get('db');
+    dbInstance
+        .boards_update(
+            id,
+            updatedBoard['board_name'],
+            updatedBoard.queries[0]['query_text'],
+            updatedBoard.queries[0]['capture_mode']
+        )
+        .then(() => {
+            res.sendStatus(200);
+        });
+});
 
 //* Deletes the specified board
 app.delete('/boards/:id', requireLogin);
