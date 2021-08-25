@@ -1,3 +1,3 @@
 UPDATE users
-SET password=$1
-WHERE user_id=$2;
+SET password = $2
+WHERE user_id = $1;

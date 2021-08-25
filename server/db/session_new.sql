@@ -1,2 +1,2 @@
 INSERT INTO logins (user_id, login_info)
-VALUES ($1, CURRENT_TIMESTAMP)
+VALUES ($1, CURRENT_TIMESTAMP);
