@@ -56,5 +56,6 @@ button {
     outline: none;
 }
 
-input {
+.hovered:hover {
+    transition: all 1s ease;
 }

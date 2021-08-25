@@ -86,7 +86,11 @@ export default function Manage(props) {
                         style={{ marginLeft: '0.5em' }}
                         type='password'></input>
                 </p>
-                <button className='standard-btn'>Change Password</button>
+                <button
+                    className='standard-btn'
+                    onClick={(e) => window.location.reload()}>
+                    Change Password
+                </button>
                 <hr />
                 <AvatarBlock>
                     <strong>Avatar:</strong>

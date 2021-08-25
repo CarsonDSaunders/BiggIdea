@@ -67,7 +67,7 @@ export default class Board extends Component {
     }
 
     closeModal() {
-        this.setState({ modalOpen: true });
+        this.setState({ modalOpen: false });
     }
 
     async componentDidMount() {
@@ -103,18 +103,11 @@ export default class Board extends Component {
     }
 
     expandTweet(tweet) {
-        this.openModal();
         console.log(tweet);
-        let tweetUrl = `https://twitter.com/${tweet.author_id}/status/${tweet.id}`;
-        axios
-            .get('/api/social/twitter/embed', { url: tweetUrl })
-            .then((response) => {
-                console.log(response);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-        return;
+        window.open(
+            `https://twitter.com/${tweet.author_id}/status/${tweet.id}`,
+            '_blank'
+        );
     }
 
     render() {

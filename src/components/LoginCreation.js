@@ -5,23 +5,42 @@ import axios from 'axios';
 
 //styled-componenets
 const LoginContainer = styled.div`
-    width: 100%;
+    align-self: center;
+    width: 50%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 3em;
+`;
+
+const PageContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+
+    @media (max-width: 1024px) {
+        width: 100vw;
+        height: 100vh;
+        margin: 0;
+    }
 `;
 
 const LoginForm = styled.form`
-    width: auto;
-    height: 60vh;
+    width: 100vw;
+    height: auto;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    border: 3px solid lightgray;
-    border-radius: 1em;
-    padding: 1em 5em;
+
+    @media (max-width: 1024px) {
+        width: 100vw;
+        margin: 0;
+    }
 `;
 
 const ErrorMessage = styled.p`
@@ -32,17 +51,48 @@ const ErrorMessage = styled.p`
 const Field = styled.div`
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
+    text-align: left;
+    width: 40em;
 `;
 
 const FieldName = styled.strong`
     font-size: 1.5em;
+    text-align: left;
 `;
 
 const FieldInput = styled.input`
     margin-left: 2em;
+    background: none;
+    font-size: 1.2em;
+    padding: 10px 10px 10px 5px;
+    display: block;
+    border: none;
+    border-radius: 0;
+    border-bottom: 1px solid lightgray;
+    letter-spacing: 0.1em;
+    margin-bottom: 1em;
 `;
+
+const VidContainer = styled.div`
+    width: 100vw;
+    height: 100vh;
+    text-align: center;
+    overflow: hidden;
+    z-index: -1000;
+    position: fixed;
+`;
+
+const Video = styled.video`
+    width: inherit;
+    height: inherit;
+    -o-filter: blur(15px);
+    filter: blur(15px);
+    object-fit: cover;
+    transform: scale(1.04);
+`;
+
 export default class LoginCreation extends Component {
     constructor(props) {
         super(props);
@@ -162,97 +212,110 @@ export default class LoginCreation extends Component {
 
     render() {
         return (
-            <LoginContainer>
-                <div className='login-creation-header'>
-                    <img
-                        style={{ cursor: 'pointer' }}
-                        src='https://biggidea.s3.us-west-1.amazonaws.com/Logo_Header.png'
-                        onClick={() => this.backToLogin()}
-                    />
-                </div>
-                <LoginForm>
-                    <Field>
-                        <FieldName>Email:</FieldName>
-                        <FieldInput
-                            className='login-creation-input'
-                            type='email'
-                            placeholder='Email'
-                            value={this.state.emailVal}
-                            onChange={(e) => this.updateEmail(e.target.value)}
+            <PageContainer>
+                <VidContainer>
+                    <Video loop muted autoPlay id='bgVideo'>
+                        <source
+                            src='https://biggidea.s3.us-west-1.amazonaws.com/Login_BG.mp4'
+                            type='video/mp4'
                         />
-                    </Field>
-                    <Field>
-                        <FieldName>First Name:</FieldName>
-                        <FieldInput
-                            className='login-creation-input'
-                            type='text'
-                            placeholder='First Name'
-                            value={this.state.firstNameVal}
-                            onChange={(e) =>
-                                this.updateFirstName(e.target.value)
-                            }
+                        Sorry, your browser does not support HTML5 video.
+                    </Video>
+                </VidContainer>
+                <LoginContainer>
+                    <div className='login-creation-header'>
+                        <img
+                            style={{ cursor: 'pointer' }}
+                            src='https://biggidea.s3.us-west-1.amazonaws.com/Logo_Header.png'
+                            onClick={() => this.backToLogin()}
                         />
-                    </Field>
-                    <Field>
-                        <FieldName>Last Name:</FieldName>
-                        <FieldInput
-                            className='login-creation-input'
-                            type='text'
-                            placeholder='Last Name'
-                            value={this.state.lastNameVal}
-                            onChange={(e) =>
-                                this.updateLastName(e.target.value)
-                            }
-                        />
-                    </Field>
-                    <Field>
-                        <FieldName>Username:</FieldName>
-                        <FieldInput
-                            className='login-creation-input'
-                            type='text'
-                            placeholder='Username'
-                            value={this.state.usernameVal}
-                            onChange={(e) =>
-                                this.updateUsername(e.target.value)
-                            }
-                        />
-                    </Field>
-                    <Field>
-                        <FieldName>Password:</FieldName>
-                        <FieldInput
-                            className='login-creation-input'
-                            type='text'
-                            placeholder='Password'
-                            value={this.state.passwordVal}
-                            onChange={(e) =>
-                                this.updatePassword(e.target.value)
-                            }
-                        />
-                    </Field>
-                    <Field>
-                        <FieldName>Confirm Password:</FieldName>
-                        <FieldInput
-                            className='login-creation-input'
-                            type='text'
-                            placeholder='Confirm Password'
-                            value={this.state.passwordConfirmVal}
-                            onChange={(e) =>
-                                this.updatePasswordConfirm(e.target.value)
-                            }
-                        />
-                    </Field>
+                    </div>
+                    <LoginForm>
+                        <Field>
+                            <FieldName>Email:</FieldName>
+                            <FieldInput
+                                className='login-creation-input'
+                                type='email'
+                                placeholder='Email'
+                                value={this.state.emailVal}
+                                onChange={(e) =>
+                                    this.updateEmail(e.target.value)
+                                }
+                            />
+                        </Field>
+                        <Field>
+                            <FieldName>First Name:</FieldName>
+                            <FieldInput
+                                className='login-creation-input'
+                                type='text'
+                                placeholder='First Name'
+                                value={this.state.firstNameVal}
+                                onChange={(e) =>
+                                    this.updateFirstName(e.target.value)
+                                }
+                            />
+                        </Field>
+                        <Field>
+                            <FieldName>Last Name:</FieldName>
+                            <FieldInput
+                                className='login-creation-input'
+                                type='text'
+                                placeholder='Last Name'
+                                value={this.state.lastNameVal}
+                                onChange={(e) =>
+                                    this.updateLastName(e.target.value)
+                                }
+                            />
+                        </Field>
+                        <Field>
+                            <FieldName>Username:</FieldName>
+                            <FieldInput
+                                className='login-creation-input'
+                                type='text'
+                                placeholder='Username'
+                                value={this.state.usernameVal}
+                                onChange={(e) =>
+                                    this.updateUsername(e.target.value)
+                                }
+                            />
+                        </Field>
+                        <Field>
+                            <FieldName>Password:</FieldName>
+                            <FieldInput
+                                className='login-creation-input'
+                                type='text'
+                                placeholder='Password'
+                                value={this.state.passwordVal}
+                                onChange={(e) =>
+                                    this.updatePassword(e.target.value)
+                                }
+                            />
+                        </Field>
+                        <Field>
+                            <FieldName>Confirm Password:</FieldName>
+                            <FieldInput
+                                className='login-creation-input'
+                                type='text'
+                                placeholder='Confirm Password'
+                                value={this.state.passwordConfirmVal}
+                                onChange={(e) =>
+                                    this.updatePasswordConfirm(e.target.value)
+                                }
+                            />
+                        </Field>
 
-                    <Link to='/'>
-                        <button
-                            type='submit'
-                            className='login-creation-submit standard-btn'
-                            onClick={(e) => this.handleSubmit(e)}>
-                            Create Account
-                        </button>
-                    </Link>
-                    <ErrorMessage>{this.state.errorMessage}</ErrorMessage>
-                </LoginForm>
-            </LoginContainer>
+                        <Link to='/'>
+                            <button
+                                type='submit'
+                                className='login-creation-submit standard-btn'
+                                onClick={(e) => this.handleSubmit(e)}>
+                                Create Account
+                            </button>
+                        </Link>
+                        <ErrorMessage>{this.state.errorMessage}</ErrorMessage>
+                    </LoginForm>
+                </LoginContainer>
+            </PageContainer>
         );
     }
 }

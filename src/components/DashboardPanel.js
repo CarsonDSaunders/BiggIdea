@@ -6,7 +6,8 @@ import Editor from './Editor';
 import Add from './Add';
 
 const EditorContainer = styled.div`
-    border: 3px solid black;
+    border: 3px solid gray;
+    border-radius: 2em;
     width: 50vw;
     margin-left: 500px;
     padding: 1em;

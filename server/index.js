@@ -7,6 +7,7 @@ const twitter = require('./controllers/Twitter');
 const massive = require('massive');
 const cookieParser = require('cookie-parser');
 const multer = require('multer');
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -32,7 +33,7 @@ AWS.config.update({
 
 //* Middleware
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static(__dirname + '/../build'));
 app.use(cookieParser());
 app.use(cors());
 app.use(
@@ -53,6 +54,9 @@ function requireLogin(req, res, next) {
     }
 }
 
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../build/index.html'));
+});
 //* Makes sure a user has a valid session before sending the correct route (front-end)
 app.get('/api/verify', requireLogin, (req, res) => {
     res.sendStatus(200);
@@ -84,10 +88,6 @@ app.post('/api/authenticate', async (req, res) => {
             res.sendStatus(404);
         }
     }
-});
-
-app.get('/', function (req, res) {
-    res.redirect('/');
 });
 
 //* Creates a user account

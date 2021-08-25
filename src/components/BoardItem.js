@@ -11,6 +11,8 @@ const ItemCard = styled.button`
     border-radius: 1em;
     padding: 1em;
     background-color: #00471b;
+    cursor: pointer;
+    transition: all 1s ease;
 `;
 
 const ImageCard = styled(ItemCard)`

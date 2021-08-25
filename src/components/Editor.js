@@ -1,7 +1,22 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import styled from 'styled-components';
 
+const SpanStuff = styled.span`
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+`;
+
+const FieldItem = styled.p`
+    margin-left: 1em;
+`;
+
+const Preview = styled.span`
+    margin-bottom: 2em;
+`;
 export default class Editor extends Component {
     constructor(props) {
         super(props);
@@ -89,19 +104,18 @@ export default class Editor extends Component {
                             this.handleInputChange('boardName', e.target.value)
                         }
                     />
-                    <br />
                 </span>
-                <span>
+                <SpanStuff>
                     <strong>Board ID: </strong>
-                    <p>{this.props.board['board_id']}</p>
-                </span>
-                <br />
-                <span>
+                    <FieldItem>{this.props.board['board_id']}</FieldItem>
+                </SpanStuff>
+                <SpanStuff>
                     <strong>Creation Date: </strong>
-                    <p>{this.props.board['creation_date']}</p>
-                </span>
-                <br />
-                <span>
+                    <FieldItem>
+                        {this.props.board['creation_date'].toLocaleString()}
+                    </FieldItem>
+                </SpanStuff>
+                <Preview>
                     <Link
                         to={{
                             pathname: `/boards/${this.props.board['board_id']}/preview`,
@@ -109,7 +123,8 @@ export default class Editor extends Component {
                         }}>
                         Preview Board
                     </Link>
-                </span>
+                </Preview>
+                <br />
                 <br />
                 <form>
                     <strong>Twitter: </strong>
@@ -120,7 +135,7 @@ export default class Editor extends Component {
                             this.handleInputChange('queryText', e.target.value)
                         }
                     />
-                    <div>
+                    <div style={{ marginTop: '1em' }}>
                         <input
                             type='radio'
                             id='hashtag'
