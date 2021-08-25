@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import styled from 'styled-components';
 
+const BoardName = styled.span`
+    margin-bottom: 1em;
+`;
 export default class Editor extends Component {
     constructor(props) {
         super(props);
@@ -63,7 +67,7 @@ export default class Editor extends Component {
     render() {
         return (
             <div>
-                <span>
+                <BoardName>
                     <strong>Board Name: </strong>
                     <input
                         value={this.state.boardName}
@@ -73,7 +77,7 @@ export default class Editor extends Component {
                         }
                     />
                     <br />
-                </span>
+                </BoardName>
                 <form>
                     <strong>Twitter: </strong>
                     <input
@@ -109,7 +113,9 @@ export default class Editor extends Component {
                         <label htmlFor='account'>Account</label>
                     </div>
                 </form>
-                <button onClick={() => this.handleClickButton()}>
+                <button
+                    className='standard-btn'
+                    onClick={() => this.handleClickButton()}>
                     Add Board
                 </button>
             </div>

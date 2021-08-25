@@ -16,8 +16,8 @@ export default class Dashboard extends Component {
         super(props);
 
         this.state = {
-            activePanel: 'board',
-            activeBoard: 0,
+            activePanel: 'add',
+            activeBoard: null,
             data: {},
             loading: true,
         };

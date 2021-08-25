@@ -67,7 +67,7 @@ const Divider = styled.hr`
 
 export default function DashboardSidebar(props) {
     const [activeOption, setActiveOption] = useState('board');
-    const [activeBoard, setActiveBoard] = useState(0);
+    const [activeBoard, setActiveBoard] = useState(null);
     const [boardsList, setBoardsList] = useState([]);
 
     function handleButtonClick(option, board) {
@@ -85,9 +85,49 @@ export default function DashboardSidebar(props) {
         if (props.loading === true) {
             return;
         } else {
-            setBoardsList(props.userBoards);
+            if (props.userBoards === undefined) {
+                return;
+            } else {
+                setBoardsList(props.userBoards);
+            }
         }
     }, [props.loading, props.userBoards]);
+
+    function checkBoardsList() {
+        if (boardsList.length === 0) {
+            return (
+                <div>
+                    <br />
+                    <SidebarSubOption>Add A Board!</SidebarSubOption>
+                </div>
+            );
+        } else {
+            return props.loading
+                ? null
+                : boardsList.map((board, index) => {
+                      return activeOption === 'board' &&
+                          activeBoard === index ? (
+                          <ActiveSubOption
+                              key={board.board_id}
+                              onClick={(e) =>
+                                  handleButtonClick('board', index)
+                              }>
+                              {board.board_name}
+                              <br />
+                          </ActiveSubOption>
+                      ) : (
+                          <SidebarSubOption
+                              key={board.board_id}
+                              onClick={(e) =>
+                                  handleButtonClick('board', index)
+                              }>
+                              {board.board_name}
+                              <br />
+                          </SidebarSubOption>
+                      );
+                  });
+        }
+    }
 
     return (
         <StyledSidebar className='sidebar-container'>
@@ -142,30 +182,8 @@ export default function DashboardSidebar(props) {
                     <div>
                         <NonOption>Boards:</NonOption>
                         <br />
-                        {props.loading
-                            ? null
-                            : boardsList.map((board, index) => {
-                                  return activeOption === 'board' &&
-                                      activeBoard === index ? (
-                                      <ActiveSubOption
-                                          key={board.board_id}
-                                          onClick={(e) =>
-                                              handleButtonClick('board', index)
-                                          }>
-                                          {board.board_name}
-                                          <br />
-                                      </ActiveSubOption>
-                                  ) : (
-                                      <SidebarSubOption
-                                          key={board.board_id}
-                                          onClick={(e) =>
-                                              handleButtonClick('board', index)
-                                          }>
-                                          {board.board_name}
-                                          <br />
-                                      </SidebarSubOption>
-                                  );
-                              })}
+                        {checkBoardsList()}
+                        <br />
                     </div>
                 </BoardOptions>
             </div>

@@ -7,7 +7,7 @@ const AvatarPreview = styled.img`
     height: 8em;
     width: 8em;
     margin-left: 0.5em;
-    border: 1px lightgray solid;
+    border: 3px darkgray solid;
     border-radius: 50%;
 `;
 

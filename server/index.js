@@ -99,6 +99,7 @@ app.post('/api/login/create', async (req, res) => {
     let newUser = { ...req.body };
     newUser.username = newUser.username.toLowerCase();
     let { email, firstName, lastName, username, password } = newUser;
+    let avatar = 'https://via.placeholder.com/150?text=BIGG';
 
     dbInstance.users
         .count({
@@ -115,7 +116,8 @@ app.post('/api/login/create', async (req, res) => {
                             firstName,
                             lastName,
                             username,
-                            hash
+                            hash,
+                            avatar
                         )
                         .then(() => {
                             res.sendStatus(200);

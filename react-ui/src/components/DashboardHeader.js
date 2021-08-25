@@ -40,6 +40,7 @@ const Avatar = styled.img`
     height: 3em;
     width: 3em;
     border-radius: 50%;
+    border: 3px darkgray solid;
 `;
 
 const LogOut = styled.i`
@@ -69,7 +70,13 @@ export default function DashboardHeader(props) {
                     {props.loading ? (
                         <h2>...</h2>
                     ) : (
-                        <Avatar src={`${props.activeUser.avatar}`} />
+                        <Avatar
+                            src={
+                                props.activeUser.avatar
+                                    ? `${props.activeUser.avatar}`
+                                    : 'https://via.placeholder.com/150?text=BIGG'
+                            }
+                        />
                     )}
                     <h2>
                         {props.loading

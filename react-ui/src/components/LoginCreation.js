@@ -43,9 +43,14 @@ const LoginForm = styled.form`
     }
 `;
 
-const ErrorMessage = styled.p`
+const message = styled.p`
     color: red;
     font-size: 2em;
+`;
+
+const SuccessMessage = styled(message)`
+    color: green;
+    font-weight: bold;
 `;
 
 const Field = styled.div`
@@ -104,8 +109,8 @@ export default class LoginCreation extends Component {
             usernameVal: '',
             passwordVal: '',
             passwordConfirmVal: '',
-            activeError: false,
-            errorMessage: '',
+            activeMessage: false,
+            message: '',
         };
 
         this.updateEmail = this.updateEmail.bind(this);
@@ -157,8 +162,8 @@ export default class LoginCreation extends Component {
             .then((response) => {
                 if (response.status === 200) {
                     this.setState({
-                        activeError: true,
-                        errorMessage: 'Success',
+                        activeMessage: true,
+                        message: 'Success',
                     });
                 } else {
                     console.log(response);
@@ -177,22 +182,22 @@ export default class LoginCreation extends Component {
             curState.passwordConfirmVal === ''
         ) {
             this.setState({
-                activeError: true,
-                errorMessage: 'Not all fields are properly filled out',
+                activeMessage: true,
+                message: 'Not all fields are properly filled out',
             });
             console.error(`ERROR: Not all fields are properly filled out`);
             return;
         } else if (curState.passwordVal !== curState.passwordConfirmVal) {
             this.setState({
-                activeError: true,
-                errorMessage: 'Passwords do not match',
+                activeMessage: true,
+                message: 'Passwords do not match',
             });
             console.error(`ERROR: Passwords do not match`);
             return;
         } else {
             this.setState({
-                activeError: false,
-                errorMessage: '',
+                activeMessage: false,
+                message: '',
             });
             return;
         }
@@ -201,7 +206,7 @@ export default class LoginCreation extends Component {
     handleSubmit(event) {
         event.preventDefault();
         this.validateInput();
-        if (this.state.activeError === false) {
+        if (this.state.activeMessage === false) {
             this.sendRequest();
         }
     }
@@ -225,7 +230,7 @@ export default class LoginCreation extends Component {
                 <LoginContainer>
                     <div className='login-creation-header'>
                         <img
-                            alt='ACcount Creation Header'
+                            alt='Account Creation Header'
                             style={{ cursor: 'pointer' }}
                             src='https://biggidea.s3.us-west-1.amazonaws.com/Logo_Header.png'
                             onClick={() => this.backToLogin()}
@@ -313,7 +318,13 @@ export default class LoginCreation extends Component {
                                 Create Account
                             </button>
                         </Link>
-                        <ErrorMessage>{this.state.errorMessage}</ErrorMessage>
+                        {this.state.message === 'Success' ? (
+                            <SuccessMessage>
+                                {this.state.message}
+                            </SuccessMessage>
+                        ) : (
+                            <message>{this.state.message}</message>
+                        )}
                     </LoginForm>
                 </LoginContainer>
             </PageContainer>

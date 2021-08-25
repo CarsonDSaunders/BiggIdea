@@ -167,7 +167,9 @@ export default class Editor extends Component {
                         <label htmlFor='account'>Account</label>
                     </div>
                 </form>
-                <button onClick={() => this.handleClickButton()}>
+                <button
+                    className='standard-btn'
+                    onClick={() => this.handleClickButton()}>
                     Save Changes
                 </button>
             </div>
