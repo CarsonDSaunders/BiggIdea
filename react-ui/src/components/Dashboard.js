@@ -25,15 +25,10 @@ export default class Dashboard extends Component {
         this.changeBoard = this.changeBoard.bind(this);
     }
 
-    componentDidMount() {
-        axios
-            .get(`/api/user/`)
-            .then((response) => {
-                this.setState({ data: response.data, loading: false });
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+    async componentDidMount() {
+        axios.get(`/api/user/`).then((response) => {
+            this.setState({ data: response.data, loading: false });
+        });
     }
 
     changePanelDisplay(panel) {

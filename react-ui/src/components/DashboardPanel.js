@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Manage from './Manage';
 import Usage from './Usage';
@@ -37,7 +37,6 @@ export default function DashboardPanel(props) {
                 return 'Board Editor';
             default:
                 return 'Manage Account';
-                break;
         }
     }
 
@@ -63,7 +62,6 @@ export default function DashboardPanel(props) {
 
             default:
                 return 'Manage Account';
-                break;
         }
     }
 

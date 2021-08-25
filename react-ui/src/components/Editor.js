@@ -1,20 +1,46 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import styled from 'styled-components';
 
+const SpanStuff = styled.span`
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+`;
+
+const FieldItem = styled.p`
+    margin-left: 1em;
+`;
+
+const Preview = styled.span`
+    margin-bottom: 2em;
+`;
 export default class Editor extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            boardName: '',
-            twitterQueryText: '',
-            twitterQueryMode: 'hashtag',
+            boardName: this.props.board['board_name'],
+            twitterQueryText: this.props.board.queries[0]['query_text'],
+            twitterQueryMode: this.props.board.queries[0]['capture_mode'],
             boardNameError: false,
             queryTextError: false,
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.toDate = this.toDate.bind(this);
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.board['board_id'] !== this.props.board['board_id']) {
+            this.setState({
+                boardName: this.props.board['board_name'],
+                twitterQueryText: this.props.board.queries[0]['query_text'],
+                twitterQueryMode: this.props.board.queries[0]['capture_mode'],
+            });
+        }
     }
 
     handleInputChange(field, value) {
@@ -44,21 +70,32 @@ export default class Editor extends Component {
                 return;
             } else {
                 this.setState({ queryTextError: false });
-                let payload = {
-                    board_name: this.state.boardName,
-                    platform_id: 0,
-                    query_text: this.state.twitterQueryText,
-                    capture_mode: this.state.twitterQueryMode,
-                };
-                axios.post(`/api/boards/`, payload).then((response) => {
-                    if (response.status === 200) {
+                let updatedBoard = { ...this.props.board };
+                updatedBoard['board_name'] = this.state.boardName;
+                updatedBoard.queries[0]['query_text'] =
+                    this.state.twitterQueryText;
+                updatedBoard.queries[0]['capture_mode'] =
+                    this.state.twitterQueryMode;
+
+                axios
+                    .put(
+                        `/api/boards/${updatedBoard['board_id']}`,
+                        updatedBoard
+                    )
+                    .then((response) => {
                         window.location.reload();
-                    } else {
-                        console.log('Unsuccessful');
-                    }
-                });
+                        return;
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
             }
         }
+    }
+
+    toDate(date) {
+        let newDate = new Date(date);
+        return newDate.toLocaleDateString();
     }
 
     render() {
@@ -73,8 +110,28 @@ export default class Editor extends Component {
                             this.handleInputChange('boardName', e.target.value)
                         }
                     />
-                    <br />
                 </span>
+                <SpanStuff>
+                    <strong>Board ID: </strong>
+                    <FieldItem>{this.props.board['board_id']}</FieldItem>
+                </SpanStuff>
+                <SpanStuff>
+                    <strong>Creation Date: </strong>
+                    <FieldItem>
+                        {this.toDate(this.props.board['creation_date'])}
+                    </FieldItem>
+                </SpanStuff>
+                <Preview>
+                    <Link
+                        to={{
+                            pathname: `/boards/${this.props.board['board_id']}/preview`,
+                            state: { board: this.props.board },
+                        }}>
+                        Preview Board
+                    </Link>
+                </Preview>
+                <br />
+                <br />
                 <form>
                     <strong>Twitter: </strong>
                     <input
@@ -84,7 +141,7 @@ export default class Editor extends Component {
                             this.handleInputChange('queryText', e.target.value)
                         }
                     />
-                    <div>
+                    <div style={{ marginTop: '1em' }}>
                         <input
                             type='radio'
                             id='hashtag'
@@ -111,7 +168,7 @@ export default class Editor extends Component {
                     </div>
                 </form>
                 <button onClick={() => this.handleClickButton()}>
-                    Add Board
+                    Save Changes
                 </button>
             </div>
         );

@@ -225,6 +225,7 @@ export default class LoginCreation extends Component {
                 <LoginContainer>
                     <div className='login-creation-header'>
                         <img
+                            alt='ACcount Creation Header'
                             style={{ cursor: 'pointer' }}
                             src='https://biggidea.s3.us-west-1.amazonaws.com/Logo_Header.png'
                             onClick={() => this.backToLogin()}

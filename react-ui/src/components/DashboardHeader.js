@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from 'react';
+import { React } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
@@ -44,15 +44,13 @@ const Avatar = styled.img`
 
 const LogOut = styled.i`
     cursor: pointer;
+    margin-right: 20px;
 `;
 export default function DashboardHeader(props) {
     let history = useHistory();
-    let [avatarUrl, setAvatar] = useState(
-        'https://biggidea.s3.us-west-1.amazonaws.com/Logo_No_Text.png'
-    );
 
     function logoutUser() {
-        axios.get('/logout').then((response) => {
+        axios.get('/api/logout').then((response) => {
             if (response.status === 200) {
                 setTimeout(() => {
                     history.push('/');

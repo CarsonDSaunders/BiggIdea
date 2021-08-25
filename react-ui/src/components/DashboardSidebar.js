@@ -87,7 +87,7 @@ export default function DashboardSidebar(props) {
         } else {
             setBoardsList(props.userBoards);
         }
-    });
+    }, [props.loading, props.userBoards]);
 
     return (
         <StyledSidebar className='sidebar-container'>

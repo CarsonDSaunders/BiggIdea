@@ -134,9 +134,16 @@ export default class Login extends Component {
                     activeError: false,
                     errorMessage: '',
                 });
-                this.props.history.push({
-                    pathname: '/dashboard',
-                });
+                axios
+                    .get(`/api/user/`)
+                    .then((response) => {
+                        this.props.history.push({
+                            pathname: '/dashboard',
+                        });
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
             })
             .catch((err) => {
                 event.target.style = 'opacity: 100%';

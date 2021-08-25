@@ -32,6 +32,7 @@ const ChangeAvatarButton = styled.button`
 export default function Manage(props) {
     const [email, setEmail] = useState();
     const [newAvatar, setNewAvatar] = useState();
+    const [newPassword, setNewPassword] = useState();
 
     useEffect(() => {
         if (props.loading === true) {
@@ -39,7 +40,7 @@ export default function Manage(props) {
         } else {
             setEmail(props.userData.email);
         }
-    });
+    }, [props.loading, props.userData.email]);
 
     function handleSelectAvatarFile(e) {
         setNewAvatar(e.target.files[0]);
@@ -50,11 +51,12 @@ export default function Manage(props) {
             return;
         } else {
             let fileExt = newAvatar.name.split('.').pop();
+            let date = Date.now();
             const fd = new FormData();
             fd.append(
                 'image',
                 newAvatar,
-                `user_${props.userData.user_id}.${fileExt}`
+                `user_${props.userData.user_id}_${date}.${fileExt}`
             );
             axios
                 .post(`/api/images/user/${props.userData.user_id}`, fd, {
@@ -72,6 +74,24 @@ export default function Manage(props) {
         }
     }
 
+    function handleNewPasswordChange(val) {
+        setNewPassword(val);
+    }
+
+    function updatePassword() {
+        if (!newPassword) {
+            return;
+        } else {
+            axios
+                .put(`/api/password/${props.userData.user_id}`, {
+                    password: newPassword,
+                })
+                .then((response) => {
+                    window.location.reload();
+                });
+        }
+    }
+
     return (
         <div>
             <div>
@@ -84,11 +104,14 @@ export default function Manage(props) {
                     <strong>New Password:</strong>
                     <input
                         style={{ marginLeft: '0.5em' }}
-                        type='password'></input>
+                        type='password'
+                        onChange={(e) =>
+                            handleNewPasswordChange(e.target.value)
+                        }></input>
                 </p>
                 <button
                     className='standard-btn'
-                    onClick={(e) => window.location.reload()}>
+                    onClick={(e) => updatePassword(e)}>
                     Change Password
                 </button>
                 <hr />
