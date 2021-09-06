@@ -8,6 +8,7 @@ const massive = require('massive');
 const cookieParser = require('cookie-parser');
 const multer = require('multer');
 const path = require('path');
+const axios = require('axios');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -53,12 +54,6 @@ function requireLogin(req, res, next) {
         next();
     }
 }
-
-// app.get('*', function (request, response) {
-//     response.sendFile(
-//         path.resolve(__dirname, '../react-ui/build', 'index.html')
-//     );
-// });
 
 //* Makes sure a user has a valid session before sending the correct route (front-end)
 app.get('/api/verify', requireLogin, (req, res) => {
@@ -182,7 +177,7 @@ app.get('/api/sessions/', requireLogin, async (req, res) => {
 });
 
 //* Updates a user's password
-app.put('/api/password/:id', async (req, res) => {
+app.put('/api/password/:id', requireLogin, async (req, res) => {
     const dbInstance = await req.app.get('db');
     let userId = req.params.id;
     let { password } = req.body;
@@ -309,14 +304,18 @@ app.get('/api/social/twitter/:term', async (req, res) => {
 });
 
 //* Embeds Tweet
-app.get('/api/social/twitter/embed', async (req, res) => {
-    let tweetUrl = req.query.url;
-    let embeddedTweet = await twitter.embedTweet(tweetUrl);
-    if (embeddedTweet) {
-        res.status(200).send(embeddedTweet);
-    } else {
-        res.status(404).send('Unable to embed tweet!');
-    }
+app.post('/api/embed', async (req, res) => {
+    let tweetUrl = req.body.url;
+    console.log(tweetUrl);
+    axios
+        .get(`https://publish.twitter.com/oembed?url=${tweetUrl}`)
+        .then((response) => {
+            res.status(200).send(response.data.html);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(404).send('Unable to embed tweet!');
+        });
 });
 
 app.listen(PORT, () => console.log(`Server is running on PORT ${PORT}`));

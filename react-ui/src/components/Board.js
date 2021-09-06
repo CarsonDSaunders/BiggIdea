@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import BoardItem from './BoardItem';
 import axios from 'axios';
 import styled from 'styled-components';
-import Modal from 'react-modal';
-
-Modal.setAppElement('#root');
+import { Modal, Button } from 'react-bootstrap';
 
 const BoardContainer = styled.div`
     height: auto;
@@ -39,6 +37,7 @@ export default class Board extends Component {
             content: [],
             media: [],
             loading: true,
+            modalOpen: false,
         };
 
         this.passMedia = this.passMedia.bind(this);
@@ -79,11 +78,18 @@ export default class Board extends Component {
     }
 
     expandTweet(tweet) {
-        console.log(tweet);
-        window.open(
-            `https://twitter.com/${tweet.author_id}/status/${tweet.id}`,
-            '_blank'
-        );
+        let url = `https://twitter.com/${tweet.author_id}/status/${tweet.id}`;
+        axios.post('/api/embed/', { url: url }).then((response) => {
+            console.log(response.data);
+        });
+    }
+
+    handleOpenModal() {
+        this.setState({ modalOpen: true });
+    }
+
+    handleCloseModal() {
+        this.setState({ modalOpen: false });
     }
 
     checkLoading() {
@@ -98,12 +104,29 @@ export default class Board extends Component {
         return (
             <BoardPage className='board-page'>
                 <BoardName>{this.state.boardName}</BoardName>
+
+                <Modal show={this.state.modalOpen} onHide={handleClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Modal heading</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        Woohoo, you're reading this text in a modal!
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant='secondary' onClick={handleClose}>
+                            Close
+                        </Button>
+                        <Button variant='primary' onClick={handleClose}>
+                            Save Changes
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+
                 <BoardContainer>
                     {this.state.loading ? (
                         <h2>Loading Board...</h2>
                     ) : (
                         this.state.content.map((ele, i) => {
-                            console.log(ele, i);
                             if (ele.possibly_sensitive === false) {
                                 return (
                                     <BoardItem

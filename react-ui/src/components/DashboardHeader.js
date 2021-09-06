@@ -10,7 +10,7 @@ const HeaderBar = styled.header`
     display: flex;
     justify-content: space-between;
     border-bottom: 1px solid lightgray;
-    background-color: #253031;
+    background: none;
 `;
 
 const HeaderTitle = styled.img`

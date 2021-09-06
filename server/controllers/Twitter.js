@@ -49,12 +49,4 @@ module.exports = {
             return searchResults;
         }
     },
-    embedTweet: async (tweetUrl) => {
-        let encodedUrl = encodeURIComponent(tweetUrl);
-        axios
-            .get(`https://publish.twitter.com/oembed?url=${encodedUrl}`)
-            .then((response) => {
-                console.log(response);
-            });
-    },
 };
