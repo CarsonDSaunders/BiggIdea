@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { Image } from 'react-bootstrap';
 import '../assets/styles/hovered.css';
 
 const ItemCard = styled.button`
@@ -17,6 +18,11 @@ const ItemCard = styled.button`
 
 const ImageCard = styled(ItemCard)`
     padding: 0;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 `;
 
 const TextContainer = styled.div`
@@ -49,8 +55,9 @@ const LightPostDate = styled(DarkPostDate)`
 
 const EmbeddedImage = styled.img`
     height: 100%;
-    width: auto;
+    width: 100%;
     margin: 0;
+    object-fit: contain;
 `;
 
 export default class BoardItem extends Component {

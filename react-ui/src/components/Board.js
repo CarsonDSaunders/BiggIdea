@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import BoardItem from './BoardItem';
 import axios from 'axios';
 import styled from 'styled-components';
-import { Modal } from 'react-bootstrap';
+import { Modal, Button } from 'react-bootstrap';
 import ReactHtmlParser from 'react-html-parser';
 import '../assets/styles/twitter.css';
 
@@ -30,6 +30,8 @@ const BoardName = styled.h1`
     width: 100%;
     text-align: center;
 `;
+
+const BackButton = styled(Button)``;
 export default class Board extends Component {
     constructor(props) {
         super(props);
@@ -102,7 +104,14 @@ export default class Board extends Component {
     render() {
         return (
             <BoardPage className='board-page'>
-                <BoardName>{this.state.boardName}</BoardName>
+                <header>
+                    <BackButton
+                        variant='outline-secondary'
+                        onClick={() => this.props.history.goBack()}>
+                        Return to Dashboard
+                    </BackButton>
+                    <BoardName>{this.state.boardName}</BoardName>
+                </header>
 
                 <Modal show={this.state.modal} onHide={this.handleClose}>
                     <Modal.Header closeButton></Modal.Header>
