@@ -177,64 +177,58 @@ export default class Login extends Component {
                         />
                     </div>
                     <LoginForm>
-                        <Form fluid>
-                            <Form.Group
-                                className='mb-3'
-                                controlId='loginUsername'>
-                                <Form.Label>Username</Form.Label>
-                                <Form.Control
-                                    type='text'
-                                    value={this.state.usernameVal}
-                                    placeholder='Enter Username'
-                                    onChange={(e) =>
-                                        this.updateUsername(e.target.value)
-                                    }
-                                />
-                            </Form.Group>
+                        <Form.Group className='mb-3' controlId='loginUsername'>
+                            <Form.Label>Username</Form.Label>
+                            <Form.Control
+                                type='text'
+                                value={this.state.usernameVal}
+                                placeholder='Enter Username'
+                                onChange={(e) =>
+                                    this.updateUsername(e.target.value)
+                                }
+                            />
+                        </Form.Group>
 
-                            <Form.Group
-                                className='mb-3'
-                                controlId='loginPassword'>
-                                <Form.Label>Password</Form.Label>
-                                <Form.Control
-                                    placeholder='Enter Password'
-                                    type={
-                                        this.state.passwordHidden
-                                            ? 'password'
-                                            : 'text'
-                                    }
-                                    value={this.state.passwordVal}
-                                    onChange={(e) =>
-                                        this.updatePassword(e.target.value)
-                                    }
-                                />
-                            </Form.Group>
-                            <Form.Group
-                                className='mb-3'
-                                controlId='loginShowPassword'>
-                                <Form.Check
-                                    type='checkbox'
-                                    label='Show Password'
-                                    checked={
-                                        this.state.passwordHidden ? false : true
-                                    }
-                                    value={
-                                        this.state.passwordHidden
-                                            ? 'password'
-                                            : 'text'
-                                    }
-                                    onChange={(e) =>
-                                        this.togglePassword(e.target.checked)
-                                    }
-                                />
-                            </Form.Group>
-                            <Button
-                                variant='outline-primary'
-                                type='submit'
-                                onClick={(e) => this.handleSubmit(e)}>
-                                Login
-                            </Button>
-                        </Form>
+                        <Form.Group className='mb-3' controlId='loginPassword'>
+                            <Form.Label>Password</Form.Label>
+                            <Form.Control
+                                placeholder='Enter Password'
+                                type={
+                                    this.state.passwordHidden
+                                        ? 'password'
+                                        : 'text'
+                                }
+                                value={this.state.passwordVal}
+                                onChange={(e) =>
+                                    this.updatePassword(e.target.value)
+                                }
+                            />
+                        </Form.Group>
+                        <Form.Group
+                            className='mb-3'
+                            controlId='loginShowPassword'>
+                            <Form.Check
+                                type='checkbox'
+                                label='Show Password'
+                                checked={
+                                    this.state.passwordHidden ? false : true
+                                }
+                                value={
+                                    this.state.passwordHidden
+                                        ? 'password'
+                                        : 'text'
+                                }
+                                onChange={(e) =>
+                                    this.togglePassword(e.target.checked)
+                                }
+                            />
+                        </Form.Group>
+                        <Button
+                            variant='outline-primary'
+                            type='submit'
+                            onClick={(e) => this.handleSubmit(e)}>
+                            Login
+                        </Button>
                     </LoginForm>
                     <Link to='/create-account'>
                         <h4>Create Account</h4>

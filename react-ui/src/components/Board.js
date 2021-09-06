@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import BoardItem from './BoardItem';
 import axios from 'axios';
 import styled from 'styled-components';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
+import ReactHtmlParser from 'react-html-parser';
+import '../assets/styles/twitter.css';
 
 const BoardContainer = styled.div`
     height: auto;
@@ -28,7 +30,6 @@ const BoardName = styled.h1`
     width: 100%;
     text-align: center;
 `;
-
 export default class Board extends Component {
     constructor(props) {
         super(props);
@@ -37,12 +38,14 @@ export default class Board extends Component {
             content: [],
             media: [],
             loading: true,
-            modalOpen: false,
+            modal: false,
+            modalTweet: '',
         };
 
         this.passMedia = this.passMedia.bind(this);
         this.expandTweet = this.expandTweet.bind(this);
         this.checkLoading = this.checkLoading.bind(this);
+        this.handleClose = this.handleClose.bind(this);
     }
 
     async componentDidMount() {
@@ -80,16 +83,12 @@ export default class Board extends Component {
     expandTweet(tweet) {
         let url = `https://twitter.com/${tweet.author_id}/status/${tweet.id}`;
         axios.post('/api/embed/', { url: url }).then((response) => {
-            console.log(response.data);
+            this.setState({ modal: true, modalTweet: response.data });
         });
     }
 
-    handleOpenModal() {
-        this.setState({ modalOpen: true });
-    }
-
-    handleCloseModal() {
-        this.setState({ modalOpen: false });
+    handleClose() {
+        this.setState({ modal: false });
     }
 
     checkLoading() {
@@ -105,23 +104,13 @@ export default class Board extends Component {
             <BoardPage className='board-page'>
                 <BoardName>{this.state.boardName}</BoardName>
 
-                <Modal show={this.state.modalOpen} onHide={handleClose}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Modal heading</Modal.Title>
-                    </Modal.Header>
+                <Modal show={this.state.modal} onHide={this.handleClose}>
+                    <Modal.Header closeButton></Modal.Header>
                     <Modal.Body>
-                        Woohoo, you're reading this text in a modal!
+                        {ReactHtmlParser(this.state.modalTweet)}
                     </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant='secondary' onClick={handleClose}>
-                            Close
-                        </Button>
-                        <Button variant='primary' onClick={handleClose}>
-                            Save Changes
-                        </Button>
-                    </Modal.Footer>
+                    <Modal.Footer></Modal.Footer>
                 </Modal>
-
                 <BoardContainer>
                     {this.state.loading ? (
                         <h2>Loading Board...</h2>
