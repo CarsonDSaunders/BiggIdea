@@ -2,6 +2,7 @@ import axios from 'axios';
 import { React, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import '../assets/styles/dashboard.css';
+import Usage from './Usage';
 
 const AvatarPreview = styled.img`
     height: 8em;
@@ -135,6 +136,7 @@ export default function Manage(props) {
                     Change Avatar
                 </ChangeAvatarButton>
             </div>
+            <Usage />
         </div>
     );
 }

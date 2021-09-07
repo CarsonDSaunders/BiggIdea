@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Manage from './Manage';
-import Usage from './Usage';
+
 import Editor from './Editor';
 import Add from './Add';
 import { Container } from 'react-bootstrap';
@@ -50,8 +50,6 @@ export default function DashboardPanel(props) {
                         loading={props.loading}
                     />
                 );
-            case 'usage':
-                return <Usage userData={props.activeUser} />;
             case 'add':
                 return <Add />;
             case 'board':

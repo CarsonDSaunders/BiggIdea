@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import '../assets/font-awesome-4.7.0/css/font-awesome.min.css';
+import { Container, Col, Row } from 'react-bootstrap';
 
 const HeaderBar = styled.header`
     width: 100%;
@@ -11,12 +12,6 @@ const HeaderBar = styled.header`
     justify-content: space-between;
     border-bottom: 1px solid lightgray;
     background: none;
-`;
-
-const HeaderTitle = styled.img`
-    display: inline-block;
-    height: 100%;
-    margin-left: 2em;
 `;
 
 const TopRight = styled.div`
@@ -63,35 +58,41 @@ export default function DashboardHeader(props) {
     }
 
     return (
-        <HeaderBar>
-            <HeaderTitle src='https://biggidea.s3.us-west-1.amazonaws.com/Logo_Header.png' />
-            <TopRight>
-                <User>
-                    {props.loading ? (
-                        <h2>...</h2>
-                    ) : (
-                        <Avatar
-                            src={
-                                props.activeUser.avatar
-                                    ? `${props.activeUser.avatar}`
-                                    : 'https://via.placeholder.com/150?text=BIGG'
-                            }
+        <Container>
+            <Row>
+                <Col>
+                    <p>{props.activePanel}</p>
+                </Col>
+                <Col>
+                    <User>
+                        {props.loading ? (
+                            <h2>...</h2>
+                        ) : (
+                            <Avatar
+                                src={
+                                    props.activeUser.avatar
+                                        ? `${props.activeUser.avatar}`
+                                        : 'https://via.placeholder.com/150?text=BIGG'
+                                }
+                            />
+                        )}
+                        <h2>
+                            {props.loading
+                                ? 'Loading User'
+                                : props.activeUser['first_name']}
+                        </h2>
+                    </User>
+                </Col>
+                <Col>
+                    <span>
+                        <LogOut
+                            className='fa fa-sign-out fa-3x'
+                            aria-hidden='true'
+                            onClick={(e) => logoutUser()}
                         />
-                    )}
-                    <h2>
-                        {props.loading
-                            ? 'Loading User'
-                            : props.activeUser['first_name']}
-                    </h2>
-                </User>
-                <span>
-                    <LogOut
-                        className='fa fa-sign-out fa-3x'
-                        aria-hidden='true'
-                        onClick={(e) => logoutUser()}
-                    />
-                </span>
-            </TopRight>
-        </HeaderBar>
+                    </span>
+                </Col>
+            </Row>
+        </Container>
     );
 }
