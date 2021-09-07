@@ -2,7 +2,14 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
-import { Form, Button } from 'react-bootstrap';
+import {
+    Form,
+    Button,
+    InputGroup,
+    FormControl,
+    DropdownButton,
+    Dropdown,
+} from 'react-bootstrap';
 
 const SpanStuff = styled.span`
     display: flex;
@@ -102,6 +109,16 @@ export default class Editor extends Component {
     render() {
         return (
             <div>
+                <>
+                    <InputGroup className='mb-3'>
+                        <InputGroup.Text id='basic-addon1'>@</InputGroup.Text>
+                        <FormControl
+                            placeholder='Username'
+                            aria-label='Username'
+                            aria-describedby='basic-addon1'
+                        />
+                    </InputGroup>
+                </>
                 <span>
                     <strong>Board Name: </strong>
                     <input
@@ -133,6 +150,42 @@ export default class Editor extends Component {
                 </Preview>
                 <br />
                 <br />
+                <InputGroup className='mb-3'>
+                    <DropdownButton
+                        variant='outline-secondary'
+                        title='Dropdown'
+                        id='input-group-dropdown-1'>
+                        <Dropdown.Item>Action</Dropdown.Item>
+                        <Dropdown.Item>Another action</Dropdown.Item>
+                        <Dropdown.Item>Something else here</Dropdown.Item>
+                        <Dropdown.Divider />
+                        <Dropdown.Item href='#'>Separated link</Dropdown.Item>
+                    </DropdownButton>
+                    {this.state.twitterQueryMode === 'hashtag' ? (
+                        <span>
+                            <InputGroup.Text id='basic-addon2'>
+                                #
+                            </InputGroup.Text>
+                            <FormControl
+                                placeholder='Hashtag'
+                                aria-label='Hashtag'
+                                aria-describedby='basic-addon2'
+                            />
+                        </span>
+                    ) : (
+                        <InputGroup className='mb-3'>
+                            <InputGroup.Text id='basic-addon1'>
+                                @
+                            </InputGroup.Text>
+                            <FormControl
+                                placeholder='Username'
+                                aria-label='Username'
+                                aria-describedby='basic-addon1'
+                            />
+                        </InputGroup>
+                    )}
+                </InputGroup>
+
                 <form>
                     <strong>Twitter: </strong>
                     <input
@@ -142,6 +195,7 @@ export default class Editor extends Component {
                             this.handleInputChange('queryText', e.target.value)
                         }
                     />
+
                     <div style={{ marginTop: '1em' }}>
                         <input
                             type='radio'
@@ -155,6 +209,7 @@ export default class Editor extends Component {
                         />
                         <label htmlFor='hashtag'>Hashtag</label>
                         <br />
+
                         <input
                             type='radio'
                             id='account'

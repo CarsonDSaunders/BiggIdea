@@ -4,8 +4,9 @@ import Manage from './Manage';
 import Usage from './Usage';
 import Editor from './Editor';
 import Add from './Add';
+import { Container } from 'react-bootstrap';
 
-const EditorContainer = styled.div`
+const EditorContainer = styled(Container)`
     border: 3px solid gray;
     border-radius: 2em;
     width: 50vw;
@@ -13,7 +14,7 @@ const EditorContainer = styled.div`
     padding: 1em;
 `;
 
-const Panel = styled.div`
+const Panel = styled(Container)`
     height: 80vh;
     width: auto;
 `;
