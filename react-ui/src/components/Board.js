@@ -85,6 +85,7 @@ export default class Board extends Component {
     expandTweet(tweet) {
         let url = `https://twitter.com/${tweet.author_id}/status/${tweet.id}`;
         axios.post('/api/embed/', { url: url }).then((response) => {
+            console.log(response.data);
             this.setState({ modal: true, modalTweet: response.data });
         });
     }
