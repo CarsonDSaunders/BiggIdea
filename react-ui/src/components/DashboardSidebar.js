@@ -1,5 +1,6 @@
 import { React, useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { Image } from 'react-bootstrap';
 
 const StyledSidebar = styled.div`
     float: left;
@@ -11,6 +12,9 @@ const StyledSidebar = styled.div`
     padding: 0 2em;
     box-sizing: border-box;
     margin: 0;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+        rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+        rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 `;
 
 const AccountOptions = styled.div`
@@ -63,6 +67,12 @@ const BoxTitle = styled.h3`
 
 const Divider = styled.hr`
     width: 90%;
+`;
+
+const HeaderTitle = styled(Image)`
+    display: inline-block;
+    height: auto;
+    margin-left: 0;
 `;
 
 export default function DashboardSidebar(props) {
@@ -131,6 +141,7 @@ export default function DashboardSidebar(props) {
 
     return (
         <StyledSidebar className='sidebar-container'>
+            <HeaderTitle src='https://biggidea.s3.us-west-1.amazonaws.com/Logo_Header_Flipped.png' />
             <div className='my-account-container'>
                 <BoxTitle>My Account</BoxTitle>
                 <AccountOptions className='options-container'>
@@ -138,12 +149,12 @@ export default function DashboardSidebar(props) {
                     {activeOption === 'manage' ? (
                         <ActiveOption
                             onClick={(e) => handleButtonClick('manage', null)}>
-                            Manage Account
+                            Account
                         </ActiveOption>
                     ) : (
                         <SidebarOption
                             onClick={(e) => handleButtonClick('manage', null)}>
-                            Manage Account
+                            Account
                         </SidebarOption>
                     )}
 

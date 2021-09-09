@@ -5,11 +5,12 @@ import DashboardSidebar from './DashboardSidebar';
 import DashboardPanel from './DashboardPanel';
 import '../assets/styles/dashboard.css';
 import styled from 'styled-components';
+import { Container, Col, Row } from 'react-bootstrap';
 
-const DashboardBody = styled.div`
+const DashboardBody = styled(Container)`
     margin: 0;
-    height: 90%;
-    width: 100%;
+    height: 100vh;
+    width: auto;
 `;
 export default class Dashboard extends Component {
     constructor(props) {
@@ -42,17 +43,19 @@ export default class Dashboard extends Component {
     render() {
         return (
             <div>
-                <DashboardHeader
-                    activeUser={this.state.data.user}
+                <DashboardSidebar
+                    changePanelDisplay={this.changePanelDisplay}
+                    changeBoard={this.changeBoard}
+                    userBoards={this.state.data.boards}
                     loading={this.state.loading}
                 />
                 <DashboardBody>
-                    <DashboardSidebar
-                        changePanelDisplay={this.changePanelDisplay}
-                        changeBoard={this.changeBoard}
-                        userBoards={this.state.data.boards}
+                    <DashboardHeader
+                        activeUser={this.state.data.user}
+                        activePanel={this.state.activePanel}
                         loading={this.state.loading}
                     />
+
                     <DashboardPanel
                         activeUser={this.state.data.user}
                         userBoards={this.state.data.boards}
