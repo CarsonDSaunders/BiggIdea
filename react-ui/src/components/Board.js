@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import BoardItem from './BoardItem';
-import axios from 'axios';
-import styled from 'styled-components';
-import { Modal, Button } from 'react-bootstrap';
-import ReactHtmlParser from 'react-html-parser';
-import '../assets/styles/twitter.css';
+import React, { Component } from "react";
+import BoardItem from "./BoardItem";
+import axios from "axios";
+import styled from "styled-components";
+import { Modal, Button } from "react-bootstrap";
+import ReactHtmlParser from "react-html-parser";
+import "../assets/styles/twitter.css";
 
 const BoardContainer = styled.div`
     height: auto;
@@ -36,12 +36,12 @@ export default class Board extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            boardName: '',
+            boardName: "",
             content: [],
             media: [],
             loading: true,
             modal: false,
-            modalTweet: '',
+            modalTweet: "",
         };
 
         this.passMedia = this.passMedia.bind(this);
@@ -59,7 +59,7 @@ export default class Board extends Component {
                     params: { type: capture_mode },
                 })
                 .then((response) => {
-                    if (response.data.includes.media) {
+                    if (response.data.includes.media !== undefined) {
                         this.setState({
                             media: response.data.includes.media,
                         });
@@ -84,7 +84,7 @@ export default class Board extends Component {
 
     expandTweet(tweet) {
         let url = `https://twitter.com/${tweet.author_id}/status/${tweet.id}`;
-        axios.post('/api/embed/', { url: url }).then((response) => {
+        axios.post("/api/embed/", { url: url }).then((response) => {
             console.log(response.data);
             this.setState({ modal: true, modalTweet: response.data });
         });
@@ -104,10 +104,10 @@ export default class Board extends Component {
 
     render() {
         return (
-            <BoardPage className='board-page'>
+            <BoardPage className="board-page">
                 <header>
                     <BackButton
-                        variant='outline-secondary'
+                        variant="outline-secondary"
                         onClick={() => this.props.history.goBack()}>
                         Return to Dashboard
                     </BackButton>

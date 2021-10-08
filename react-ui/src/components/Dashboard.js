@@ -1,70 +1,98 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import DashboardHeader from './DashboardHeader';
-import DashboardSidebar from './DashboardSidebar';
-import DashboardPanel from './DashboardPanel';
-import '../assets/styles/dashboard.css';
-import styled from 'styled-components';
-import { Container, Col, Row } from 'react-bootstrap';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import DashboardHeader from "./DashboardHeader";
+import DashboardSidebar from "./DashboardSidebar";
+import DashboardPanel from "./DashboardPanel";
+import "../assets/styles/dashboard.css";
+import styled from "styled-components";
+import { useSelector } from "react-redux";
+import { Alert } from "react-bootstrap";
 
-const DashboardBody = styled(Container)`
-    margin: 0;
+const PageContainer = styled.div`
     height: 100vh;
-    width: auto;
+    width: 100vw;
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
 `;
-export default class Dashboard extends Component {
-    constructor(props) {
-        super(props);
 
-        this.state = {
-            activePanel: 'add',
-            activeBoard: null,
-            data: {},
-            loading: true,
+const DashboardBody = styled.div`
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 10fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+`;
+
+const AlertContainer = styled.div`
+    position: absolute;
+    z-index: 10;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    margin-top: 1em;
+    transition: all 0.5s;
+`;
+
+export default function Dashboard(props) {
+    const alert = useSelector((state) => state.alert.alert);
+    const type = useSelector((state) => state.alert.type);
+    const message = useSelector((state) => state.alert.message);
+    const [activePanel, setActivePanel] = useState("add");
+    const [activeBoard, setActiveBoard] = useState(null);
+    const [data, setData] = useState({});
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            axios.get(`/api/user/`).then((response) => {
+                setData(response.data);
+                setLoading(false);
+            });
         };
-        this.changePanelDisplay = this.changePanelDisplay.bind(this);
-        this.changeBoard = this.changeBoard.bind(this);
+
+        fetchData();
+    }, []);
+
+    function changePanelDisplay(panel) {
+        setActivePanel(panel);
     }
 
-    async componentDidMount() {
-        axios.get(`/api/user/`).then((response) => {
-            this.setState({ data: response.data, loading: false });
-        });
+    function changeBoard(board) {
+        setActiveBoard(board);
     }
 
-    changePanelDisplay(panel) {
-        this.setState({ activePanel: panel });
-    }
-
-    changeBoard(board) {
-        this.setState({ activeBoard: board });
-    }
-
-    render() {
-        return (
-            <div>
-                <DashboardSidebar
-                    changePanelDisplay={this.changePanelDisplay}
-                    changeBoard={this.changeBoard}
-                    userBoards={this.state.data.boards}
-                    loading={this.state.loading}
+    return (
+        <PageContainer>
+            <AlertContainer>
+                <Alert show={alert} variant={type}>
+                    {message}
+                </Alert>
+            </AlertContainer>
+            <DashboardSidebar
+                changePanelDisplay={changePanelDisplay}
+                changeBoard={changeBoard}
+                userBoards={data.boards}
+                loading={loading}
+            />
+            <DashboardBody>
+                <DashboardHeader
+                    activeUser={data.user}
+                    activePanel={activePanel}
+                    loading={loading}
                 />
-                <DashboardBody>
-                    <DashboardHeader
-                        activeUser={this.state.data.user}
-                        activePanel={this.state.activePanel}
-                        loading={this.state.loading}
-                    />
 
-                    <DashboardPanel
-                        activeUser={this.state.data.user}
-                        userBoards={this.state.data.boards}
-                        activePanel={this.state.activePanel}
-                        activeBoard={this.state.activeBoard}
-                        loading={this.state.loading}
-                    />
-                </DashboardBody>
-            </div>
-        );
-    }
+                <DashboardPanel
+                    activeUser={data.user}
+                    userBoards={data.boards}
+                    activePanel={activePanel}
+                    activeBoard={activeBoard}
+                    loading={loading}
+                />
+            </DashboardBody>
+        </PageContainer>
+    );
 }

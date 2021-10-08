@@ -1,13 +1,13 @@
-import { React, useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { Image } from 'react-bootstrap';
+import { React, useState, useEffect } from "react";
+import styled from "styled-components";
+import { Image, Accordion } from "react-bootstrap";
 
 const StyledSidebar = styled.div`
     float: left;
     display: flex;
     flex-direction: column;
     height: 100vh;
-    width: 15em;
+    width: 100%;
     background-color: #253031;
     padding: 0 2em;
     box-sizing: border-box;
@@ -76,13 +76,13 @@ const HeaderTitle = styled(Image)`
 `;
 
 export default function DashboardSidebar(props) {
-    const [activeOption, setActiveOption] = useState('board');
+    const [activeOption, setActiveOption] = useState("board");
     const [activeBoard, setActiveBoard] = useState(null);
     const [boardsList, setBoardsList] = useState([]);
 
     function handleButtonClick(option, board) {
         setActiveOption(option);
-        if (option === 'board') {
+        if (option === "board") {
             setActiveBoard(board);
             props.changePanelDisplay(option);
             props.changeBoard(board);
@@ -115,12 +115,12 @@ export default function DashboardSidebar(props) {
             return props.loading
                 ? null
                 : boardsList.map((board, index) => {
-                      return activeOption === 'board' &&
+                      return activeOption === "board" &&
                           activeBoard === index ? (
                           <ActiveSubOption
                               key={board.board_id}
                               onClick={(e) =>
-                                  handleButtonClick('board', index)
+                                  handleButtonClick("board", index)
                               }>
                               {board.board_name}
                               <br />
@@ -129,7 +129,7 @@ export default function DashboardSidebar(props) {
                           <SidebarSubOption
                               key={board.board_id}
                               onClick={(e) =>
-                                  handleButtonClick('board', index)
+                                  handleButtonClick("board", index)
                               }>
                               {board.board_name}
                               <br />
@@ -140,56 +140,39 @@ export default function DashboardSidebar(props) {
     }
 
     return (
-        <StyledSidebar className='sidebar-container'>
-            <HeaderTitle src='https://biggidea.s3.us-west-1.amazonaws.com/Logo_Header_Flipped.png' />
-            <div className='my-account-container'>
-                <BoxTitle>My Account</BoxTitle>
-                <AccountOptions className='options-container'>
+        <StyledSidebar className="sidebar-container">
+            <HeaderTitle src="https://biggidea.s3.us-west-1.amazonaws.com/Logo_Header_Flipped.png" />
+            <div className="my-account-container">
+                <AccountOptions className="options-container">
                     <br />
-                    {activeOption === 'manage' ? (
+                    {activeOption === "manage" ? (
                         <ActiveOption
-                            onClick={(e) => handleButtonClick('manage', null)}>
+                            onClick={(e) => handleButtonClick("manage", null)}>
                             Account
                         </ActiveOption>
                     ) : (
                         <SidebarOption
-                            onClick={(e) => handleButtonClick('manage', null)}>
+                            onClick={(e) => handleButtonClick("manage", null)}>
                             Account
                         </SidebarOption>
                     )}
-
                     <br />
-                    {activeOption === 'usage' ? (
+                    {activeOption === "add" ? (
                         <ActiveOption
-                            onClick={(e) => handleButtonClick('usage', null)}>
-                            View Account Usage
+                            onClick={(e) => handleButtonClick("add", null)}>
+                            Add New Board
                         </ActiveOption>
                     ) : (
                         <SidebarOption
-                            onClick={(e) => handleButtonClick('usage', null)}>
-                            View Account Usage
+                            onClick={(e) => handleButtonClick("add", null)}>
+                            Add New Board
                         </SidebarOption>
                     )}
-                    <br />
                 </AccountOptions>
             </div>
             <Divider />
-            <div className='my-boards-container'>
-                <BoxTitle>My Bigg Boards</BoxTitle>
-                <BoardOptions className='options-container'>
-                    <br />
-                    {activeOption === 'add' ? (
-                        <ActiveOption
-                            onClick={(e) => handleButtonClick('add', null)}>
-                            Add New Board
-                        </ActiveOption>
-                    ) : (
-                        <SidebarOption
-                            onClick={(e) => handleButtonClick('add', null)}>
-                            Add New Board
-                        </SidebarOption>
-                    )}
-                    <br />
+            <div className="my-boards-container">
+                <BoardOptions className="options-container">
                     <div>
                         <NonOption>Boards:</NonOption>
                         <br />

@@ -1,26 +1,24 @@
-import React from 'react';
-import styled from 'styled-components';
-import Manage from './Manage';
+import React from "react";
+import styled from "styled-components";
+import Manage from "./Manage";
 
-import Editor from './Editor';
-import Add from './Add';
-import { Container } from 'react-bootstrap';
+import Editor from "./Editor";
+import Add from "./Add";
+import { Container } from "react-bootstrap";
 
-const EditorContainer = styled(Container)`
+const PanelContainer = styled.div`
+    height: 100%;
+    width: 80%;
+    padding: 1em 2em;
+`;
+
+const EditorContainer = styled.div`
     border: 3px solid gray;
     border-radius: 2em;
-    width: 50vw;
-    margin-left: 500px;
     padding: 1em;
 `;
 
-const Panel = styled(Container)`
-    height: 80vh;
-    width: auto;
-`;
-
 const PanelTitle = styled.h2`
-    margin: 0 0 0 500px;
     font-size: 3em;
     color: #2978a0;
 `;
@@ -28,31 +26,31 @@ const PanelTitle = styled.h2`
 export default function DashboardPanel(props) {
     function renderPanelTitle() {
         switch (props.activePanel) {
-            case 'manage':
-                return 'Manage Account';
-            case 'usage':
-                return 'Account Usage';
-            case 'add':
-                return 'Add New Board';
-            case 'board':
-                return 'Board Editor';
+            case "manage":
+                return "Manage Account";
+            case "usage":
+                return "Account Usage";
+            case "add":
+                return "Add New Board";
+            case "board":
+                return "Board Editor";
             default:
-                return 'Manage Account';
+                return "Manage Account";
         }
     }
 
     function renderPanelContent() {
         switch (props.activePanel) {
-            case 'manage':
+            case "manage":
                 return (
                     <Manage
                         userData={props.activeUser}
                         loading={props.loading}
                     />
                 );
-            case 'add':
+            case "add":
                 return <Add />;
-            case 'board':
+            case "board":
                 return props.loading ? (
                     <h2>Loading Board</h2>
                 ) : (
@@ -60,16 +58,14 @@ export default function DashboardPanel(props) {
                 );
 
             default:
-                return 'Manage Account';
+                return "Manage Account";
         }
     }
 
     return (
-        <Panel>
-            <PanelTitle style={{ marginLeft: '500px' }}>
-                {renderPanelTitle()}
-            </PanelTitle>
+        <PanelContainer>
+            <PanelTitle>{renderPanelTitle()}</PanelTitle>
             <EditorContainer>{renderPanelContent()}</EditorContainer>
-        </Panel>
+        </PanelContainer>
     );
 }

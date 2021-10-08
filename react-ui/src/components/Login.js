@@ -1,20 +1,21 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import LoadingOverlay from './LoadingOverlay.js';
-import { Container, Image, Form, Button } from 'react-bootstrap';
-import styled from 'styled-components';
-import axios from 'axios';
-import '../assets/styles/dashboard.css';
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import LoadingOverlay from "./LoadingOverlay.js";
+import { Container, Image, Form, Button } from "react-bootstrap";
+import styled from "styled-components";
+import axios from "axios";
+import "../assets/styles/dashboard.css";
 
 const PageContainer = styled.div`
     height: 100vh;
     width: 100vw;
-    padding: 1em;
+    padding: 5vh 0;
 `;
 
 const LoginContainer = styled(Container)`
     align-self: center;
-    width: 40%;
+    width: 80vw;
+    height: 90vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -22,9 +23,12 @@ const LoginContainer = styled(Container)`
     background-color: rgba(255, 255, 255, 0.9);
     border-radius: 3em;
 
-    @media (max-width: 1024px) {
-        width: 100%;
-        margin: 0;
+    @media (min-width: 768px) {
+        width: 60vw;
+    }
+
+    @media (min-width: 1024px) {
+        width: 40vw;
     }
 `;
 
@@ -38,6 +42,12 @@ const LoginForm = styled(Form)`
         width: 100vw;
         margin: 0;
     }
+`;
+
+const HeaderImg = styled.img`
+    height: 15em;
+    width: 15em;
+    margin: 0 auto;
 `;
 
 const ErrorMessage = styled.p`
@@ -69,11 +79,11 @@ export default class Login extends Component {
         super(props);
 
         this.state = {
-            usernameVal: '',
-            passwordVal: '',
+            usernameVal: "",
+            passwordVal: "",
             passwordHidden: true,
             activeError: false,
-            errorMessage: '',
+            errorMessage: "",
             loading: false,
         };
 
@@ -101,22 +111,22 @@ export default class Login extends Component {
 
     handleSubmit(event) {
         event.preventDefault();
-        event.target.style = 'opacity: 40%';
+        event.target.style = "opacity: 40%";
         this.setState({
             activeError: false,
-            errorMessage: '',
+            errorMessage: "",
             loading: true,
         });
         axios
-            .post('/api/authenticate', {
+            .post("/api/authenticate", {
                 username: this.state.usernameVal,
                 password: this.state.passwordVal,
             })
             .then((response) => {
-                event.target.style = 'opacity: 100%';
+                event.target.style = "opacity: 100%";
                 this.setState({
                     activeError: false,
-                    errorMessage: '',
+                    errorMessage: "",
                 });
                 axios
                     .get(`/api/user/`)
@@ -125,7 +135,7 @@ export default class Login extends Component {
                             loading: false,
                         });
                         this.props.history.push({
-                            pathname: '/dashboard',
+                            pathname: "/dashboard",
                         });
                     })
                     .catch((error) => {
@@ -133,23 +143,23 @@ export default class Login extends Component {
                     });
             })
             .catch((err) => {
-                event.target.style = 'opacity: 100%';
+                event.target.style = "opacity: 100%";
                 if (err.response.status === 406) {
                     this.setState({
                         activeError: true,
-                        errorMessage: 'Please complete all fields',
+                        errorMessage: "Please complete all fields",
                         loading: false,
                     });
                 } else if (err.response.status === 404) {
                     this.setState({
                         activeError: true,
-                        errorMessage: 'User not found',
+                        errorMessage: "User not found",
                         loading: false,
                     });
                 } else if (err.response.status === 403) {
                     this.setState({
                         activeError: true,
-                        errorMessage: 'Invalid login credentials',
+                        errorMessage: "Invalid login credentials",
                         loading: false,
                     });
                 }
@@ -157,86 +167,94 @@ export default class Login extends Component {
     }
     render() {
         return (
-            <div className='test'>
-                {this.state.loading ? <LoadingOverlay /> : null}
+            <div>
                 <VidContainer fluid>
-                    <Video loop muted autoPlay id='bgVideo'>
+                    <Video loop muted autoPlay id="bgVideo">
                         <source
-                            src='https://biggidea.s3.us-west-1.amazonaws.com/Login_BG.mp4'
-                            type='video/mp4'
+                            src="https://biggidea.s3.us-west-1.amazonaws.com/Login_BG.mp4"
+                            type="video/mp4"
                         />
                         Sorry, your browser does not support HTML5 video.
                     </Video>
                 </VidContainer>
-                <LoginContainer>
-                    <div className='login-header'>
-                        <Image
-                            src='https://biggidea.s3.us-west-1.amazonaws.com/Logo_Text_No_BG.png'
-                            alt='Logo'
-                            fluid
-                        />
-                    </div>
-                    <LoginForm>
-                        <Form.Group className='mb-3' controlId='loginUsername'>
-                            <Form.Label>Username</Form.Label>
-                            <Form.Control
-                                type='text'
-                                value={this.state.usernameVal}
-                                placeholder='Enter Username'
-                                onChange={(e) =>
-                                    this.updateUsername(e.target.value)
-                                }
+                {this.state.loading ? <LoadingOverlay /> : null}
+                <PageContainer className="test">
+                    <LoginContainer>
+                        <div className="login-header">
+                            <HeaderImg
+                                src="https://biggidea.s3.us-west-1.amazonaws.com/Logo_Text_No_BG.png"
+                                alt="Logo"
+                                fluid
                             />
-                        </Form.Group>
+                        </div>
+                        <LoginForm>
+                            <Form.Group
+                                className="mb-3"
+                                controlId="loginUsername">
+                                <Form.Label>Username</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    value={this.state.usernameVal}
+                                    placeholder="Enter Username"
+                                    onChange={(e) =>
+                                        this.updateUsername(e.target.value)
+                                    }
+                                />
+                            </Form.Group>
 
-                        <Form.Group className='mb-3' controlId='loginPassword'>
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control
-                                placeholder='Enter Password'
-                                type={
-                                    this.state.passwordHidden
-                                        ? 'password'
-                                        : 'text'
-                                }
-                                value={this.state.passwordVal}
-                                onChange={(e) =>
-                                    this.updatePassword(e.target.value)
-                                }
-                            />
-                        </Form.Group>
-                        <Form.Group
-                            className='mb-3'
-                            controlId='loginShowPassword'>
-                            <Form.Check
-                                type='checkbox'
-                                label='Show Password'
-                                checked={
-                                    this.state.passwordHidden ? false : true
-                                }
-                                value={
-                                    this.state.passwordHidden
-                                        ? 'password'
-                                        : 'text'
-                                }
-                                onChange={(e) =>
-                                    this.togglePassword(e.target.checked)
-                                }
-                            />
-                        </Form.Group>
-                        <Button
-                            variant='outline-primary'
-                            type='submit'
-                            onClick={(e) => this.handleSubmit(e)}>
-                            Login
-                        </Button>
-                    </LoginForm>
-                    <Link to='/create-account'>
-                        <h4>Create Account</h4>
-                    </Link>
-                    {this.state.activeError ? (
-                        <ErrorMessage>{this.state.errorMessage}</ErrorMessage>
-                    ) : null}
-                </LoginContainer>
+                            <Form.Group
+                                className="mb-3"
+                                controlId="loginPassword">
+                                <Form.Label>Password</Form.Label>
+                                <Form.Control
+                                    placeholder="Enter Password"
+                                    type={
+                                        this.state.passwordHidden
+                                            ? "password"
+                                            : "text"
+                                    }
+                                    value={this.state.passwordVal}
+                                    onChange={(e) =>
+                                        this.updatePassword(e.target.value)
+                                    }
+                                />
+                            </Form.Group>
+                            <Form.Group
+                                className="mb-3"
+                                controlId="loginShowPassword">
+                                <Form.Check
+                                    type="checkbox"
+                                    label="Show Password"
+                                    checked={
+                                        this.state.passwordHidden ? false : true
+                                    }
+                                    value={
+                                        this.state.passwordHidden
+                                            ? "password"
+                                            : "text"
+                                    }
+                                    onChange={(e) =>
+                                        this.togglePassword(e.target.checked)
+                                    }
+                                />
+                            </Form.Group>
+                            <Button
+                                variant="outline-primary"
+                                type="submit"
+                                onClick={(e) => this.handleSubmit(e)}>
+                                Login
+                            </Button>
+                        </LoginForm>
+                        <Link to="/create-account">
+                            <h4>Create Account</h4>
+                        </Link>
+                        {this.state.activeError ? (
+                            <ErrorMessage>
+                                {this.state.errorMessage}
+                            </ErrorMessage>
+                        ) : null}
+                    </LoginContainer>
+                </PageContainer>
             </div>
         );
     }

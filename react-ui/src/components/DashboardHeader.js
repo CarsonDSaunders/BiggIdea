@@ -1,34 +1,20 @@
-import { React } from 'react';
-import styled from 'styled-components';
-import { useHistory } from 'react-router-dom';
-import axios from 'axios';
-import '../assets/font-awesome-4.7.0/css/font-awesome.min.css';
-import { Container, Col, Row } from 'react-bootstrap';
+import { React } from "react";
+import styled from "styled-components";
+import { useHistory } from "react-router-dom";
+import axios from "axios";
+import "../assets/font-awesome-4.7.0/css/font-awesome.min.css";
+import { Dropdown } from "react-bootstrap";
 
 const HeaderBar = styled.header`
-    width: 100%;
-    height: 5em;
+    width: 98%;
+    height: 100%;
     display: flex;
-    justify-content: space-between;
-    border-bottom: 1px solid lightgray;
+    justify-content: flex-end;
     background: none;
 `;
 
-const TopRight = styled.div`
-    height: 100%;
-    width: 15%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-`;
-
-const User = styled(TopRight)`
-    width: 10em;
-    height: 80%;
-    background-color: #d4cec4;
-    border-radius: 1em;
-    padding: 0 1em;
+const UserName = styled.span`
+    margin-left: 1em;
 `;
 
 const Avatar = styled.img`
@@ -38,18 +24,24 @@ const Avatar = styled.img`
     border: 3px darkgray solid;
 `;
 
-const LogOut = styled.i`
-    cursor: pointer;
-    margin-right: 20px;
+const UserBlock = styled(Dropdown)`
+    margin-top: 0.5em;
+    border-radius: 2em;
 `;
+
+const UserToggle = styled(Dropdown.Toggle)`
+    margin-top: 0.5em;
+    border-radius: 2em;
+`;
+
 export default function DashboardHeader(props) {
     let history = useHistory();
 
     function logoutUser() {
-        axios.get('/api/logout').then((response) => {
+        axios.get("/api/logout").then((response) => {
             if (response.status === 200) {
                 setTimeout(() => {
-                    history.push('/');
+                    history.push("/");
                 }, 1000);
             } else {
                 return;
@@ -58,41 +50,35 @@ export default function DashboardHeader(props) {
     }
 
     return (
-        <Container>
-            <Row>
-                <Col>
-                    <p>{props.activePanel}</p>
-                </Col>
-                <Col>
-                    <User>
+        <HeaderBar>
+            <UserBlock>
+                <UserToggle variant="secondary" id="dropdown-basic">
+                    <span>
                         {props.loading ? (
-                            <h2>...</h2>
+                            <span>...</span>
                         ) : (
                             <Avatar
                                 src={
                                     props.activeUser.avatar
                                         ? `${props.activeUser.avatar}`
-                                        : 'https://via.placeholder.com/150?text=BIGG'
+                                        : "https://via.placeholder.com/150?text=BIGG"
                                 }
                             />
                         )}
-                        <h2>
+                        <UserName>
                             {props.loading
-                                ? 'Loading User'
-                                : props.activeUser['first_name']}
-                        </h2>
-                    </User>
-                </Col>
-                <Col>
-                    <span>
-                        <LogOut
-                            className='fa fa-sign-out fa-3x'
-                            aria-hidden='true'
-                            onClick={(e) => logoutUser()}
-                        />
+                                ? "Loading User"
+                                : props.activeUser["first_name"]}
+                        </UserName>
                     </span>
-                </Col>
-            </Row>
-        </Container>
+                </UserToggle>
+
+                <Dropdown.Menu>
+                    <Dropdown.Item as="button" onClick={() => logoutUser()}>
+                        Log Out
+                    </Dropdown.Item>
+                </Dropdown.Menu>
+            </UserBlock>
+        </HeaderBar>
     );
 }

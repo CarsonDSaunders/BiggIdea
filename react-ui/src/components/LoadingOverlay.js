@@ -1,10 +1,10 @@
-import React from 'react';
-import { Spinner } from 'react-bootstrap';
-import styled from 'styled-components';
+import React from "react";
+import { Spinner } from "react-bootstrap";
+import styled from "styled-components";
 
 const Background = styled.div`
-    height: 100vh;
-    width: 100vw;
+    height: 100%;
+    width: 100%;
     opacity: 0.7;
     background-color: white;
     display: flex;
@@ -17,8 +17,8 @@ const Background = styled.div`
 export default function LoadingOverlay() {
     return (
         <Background>
-            <Spinner animation='border' role='status'>
-                <span className='visually-hidden'>Loading...</span>
+            <Spinner animation="border" role="status">
+                <span className="visually-hidden">Loading...</span>
             </Spinner>
         </Background>
     );
