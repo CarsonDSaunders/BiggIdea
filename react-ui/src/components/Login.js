@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import LoadingOverlay from "./LoadingOverlay.js";
-import { Container, Image, Form, Button } from "react-bootstrap";
+import { Container, Form, Button } from "react-bootstrap";
 import styled from "styled-components";
 import axios from "axios";
 import "../assets/styles/dashboard.css";

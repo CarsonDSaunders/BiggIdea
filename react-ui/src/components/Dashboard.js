@@ -12,7 +12,7 @@ const PageContainer = styled.div`
     height: 100vh;
     width: 100vw;
     display: grid;
-    grid-template-columns: 1fr 4fr;
+    grid-template-columns: 1fr 5fr;
     grid-template-rows: 1fr;
     grid-column-gap: 0px;
     grid-row-gap: 0px;

@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from "react";
 import styled from "styled-components";
-import { Image, Accordion } from "react-bootstrap";
+import { Image, Accordion, ListGroup } from "react-bootstrap";
 
 const StyledSidebar = styled.div`
     float: left;
@@ -17,14 +17,8 @@ const StyledSidebar = styled.div`
         rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 `;
 
-const AccountOptions = styled.div`
-    width: 14em;
-    height: 10%;
-    display: flex;
-    flex-direction: column;
-    justify-content: baseline;
-    align-items: flex-start;
-    margin-bottom: 1em;
+const SidebarOptions = styled(ListGroup)`
+    width: auto;
 `;
 
 const BoardOptions = styled.div`
@@ -37,37 +31,26 @@ const BoardOptions = styled.div`
     margin-bottom: 1em;
 `;
 
-const SidebarOption = styled.span`
-    font-size: 1.3em;
+const SidebarOption = styled(ListGroup.Item)`
+    font-size: 1.1em;
     cursor: pointer;
     color: lightgray;
+    background: none;
+    border: none;
+
+    &:hover {
+        background: none;
+        color: #2978a0;
+    }
+
+    &:active {
+        color: #2978a0;
+        font-weight: bold;
+        background: none;
+    }
 `;
 
-const ActiveOption = styled(SidebarOption)`
-    font-weight: bold;
-`;
-
-const NonOption = styled(SidebarOption)`
-    cursor: default;
-`;
-
-const SidebarSubOption = styled.span`
-    font-size: 1em;
-    cursor: pointer;
-    color: lightgray;
-    margin-right: 1em;
-`;
-const ActiveSubOption = styled(SidebarSubOption)`
-    font-weight: bold;
-`;
-
-const BoxTitle = styled.h3`
-    color: #2978a0;
-`;
-
-const Divider = styled.hr`
-    width: 90%;
-`;
+const SidebarBoards = styled(ListGroup)``;
 
 const HeaderTitle = styled(Image)`
     display: inline-block;
@@ -79,17 +62,6 @@ export default function DashboardSidebar(props) {
     const [activeOption, setActiveOption] = useState("board");
     const [activeBoard, setActiveBoard] = useState(null);
     const [boardsList, setBoardsList] = useState([]);
-
-    function handleButtonClick(option, board) {
-        setActiveOption(option);
-        if (option === "board") {
-            setActiveBoard(board);
-            props.changePanelDisplay(option);
-            props.changeBoard(board);
-        } else {
-            props.changePanelDisplay(option);
-        }
-    }
 
     useEffect(() => {
         if (props.loading === true) {
@@ -103,84 +75,51 @@ export default function DashboardSidebar(props) {
         }
     }, [props.loading, props.userBoards]);
 
+    function handleButtonClick(option, board) {
+        setActiveOption(option);
+        if (option === "board") {
+            setActiveBoard(board);
+            props.changePanelDisplay(option);
+            props.changeBoard(board);
+        } else {
+            props.changePanelDisplay(option);
+        }
+    }
+
     function checkBoardsList() {
         if (boardsList.length === 0) {
             return (
                 <div>
                     <br />
-                    <SidebarSubOption>Add A Board!</SidebarSubOption>
                 </div>
             );
         } else {
-            return props.loading
-                ? null
-                : boardsList.map((board, index) => {
-                      return activeOption === "board" &&
-                          activeBoard === index ? (
-                          <ActiveSubOption
-                              key={board.board_id}
-                              onClick={(e) =>
-                                  handleButtonClick("board", index)
-                              }>
-                              {board.board_name}
-                              <br />
-                          </ActiveSubOption>
-                      ) : (
-                          <SidebarSubOption
-                              key={board.board_id}
-                              onClick={(e) =>
-                                  handleButtonClick("board", index)
-                              }>
-                              {board.board_name}
-                              <br />
-                          </SidebarSubOption>
-                      );
-                  });
+            return props.loading ? null : boardsList;
         }
     }
 
     return (
         <StyledSidebar className="sidebar-container">
             <HeaderTitle src="https://biggidea.s3.us-west-1.amazonaws.com/Logo_Header_Flipped.png" />
-            <div className="my-account-container">
-                <AccountOptions className="options-container">
-                    <br />
-                    {activeOption === "manage" ? (
-                        <ActiveOption
-                            onClick={(e) => handleButtonClick("manage", null)}>
-                            Account
-                        </ActiveOption>
-                    ) : (
-                        <SidebarOption
-                            onClick={(e) => handleButtonClick("manage", null)}>
-                            Account
-                        </SidebarOption>
-                    )}
-                    <br />
-                    {activeOption === "add" ? (
-                        <ActiveOption
-                            onClick={(e) => handleButtonClick("add", null)}>
-                            Add New Board
-                        </ActiveOption>
-                    ) : (
-                        <SidebarOption
-                            onClick={(e) => handleButtonClick("add", null)}>
-                            Add New Board
-                        </SidebarOption>
-                    )}
-                </AccountOptions>
-            </div>
-            <Divider />
-            <div className="my-boards-container">
-                <BoardOptions className="options-container">
-                    <div>
-                        <NonOption>Boards:</NonOption>
-                        <br />
-                        {checkBoardsList()}
-                        <br />
-                    </div>
-                </BoardOptions>
-            </div>
+            <SidebarOptions flush>
+                <SidebarOption
+                    action
+                    onClick={(e) => handleButtonClick("manage", null)}>
+                    Account
+                </SidebarOption>
+                <SidebarOption
+                    action
+                    onClick={(e) => handleButtonClick("add", null)}>
+                    Add
+                </SidebarOption>
+                <SidebarOption
+                    action
+                    onClick={(e) => handleButtonClick("add", null)}>
+                    Boards
+                </SidebarOption>
+            </SidebarOptions>
+
+            <SidebarBoards></SidebarBoards>
         </StyledSidebar>
     );
 }
